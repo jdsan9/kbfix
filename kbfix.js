@@ -3,7 +3,7 @@
 // @namespace    https://crgstaff.com/
 // @version      1.4
 // @description  See comments for change list
-// @author       You
+// @author       JS
 // @match        https://www.crgstaff.com/*
 // @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
