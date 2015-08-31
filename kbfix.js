@@ -8,8 +8,7 @@
 // @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
-// @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.user.js
-// @updateURL    https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.meta.js
+// @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
