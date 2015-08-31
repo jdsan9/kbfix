@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.1
+// @version      1.2
 // @description  See comments for change list
 // @author       You
 // @match        https://www.crgstaff.com/*
