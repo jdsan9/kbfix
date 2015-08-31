@@ -1,19 +1,19 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.5
-// @description  See comments for change list
+// @version      1.6
+// @description  Increasing usability of KB. See comments for change list.
 // @author       JS
-// @match        https://www.crgstaff.com/*
 // @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
-// @exclude      https://www.crgstaff.com/Projects/EditAdvisorSearch.aspx*
-// @exclude      https://www.crgstaff.com/Members/AddProspect.aspx*
+// @include      https://www.crgstaff.com/Projects/ProjectDetail_Tabbed.aspx*
+// @include      https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx*
+// @include      https://www.crgstaff.com/Projects/CurrentProjects.aspx
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.5 - Add prospect company fixed
+// Release notes: 1.6 - Swapped exclude/include
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
