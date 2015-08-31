@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.7.1
+// @version      1.8.0
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -9,11 +9,12 @@
 // @include      https://www.crgstaff.com/Projects/ProjectDetail_Tabbed.aspx*
 // @include      https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx*
 // @include      https://www.crgstaff.com/Projects/CurrentProjects.aspx
+// @include      https://www.crgstaff.com/members/Overview.aspx
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.7.1 - Scroll to top bugfix
+// Release notes: 1.8.0 - Added verbal count on overview
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -116,6 +117,15 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Display relevant title information first
     var expertProfilePageTitle = document.title;
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
+    
+} else if(document.URL.indexOf("Overview.aspx") >= 0) {
+    // Overview page changes
+    
+    // Verbals count
+    var verbalString = "gvVerbals_DXDataRow";
+    var findSource = document.getElementsByTagName('html')[0].innerHTML;
+    var numVerbals = findSource.split(verbalString).length-1
+    document.querySelector("#main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0").innerText = "MY VERBALS | "+numVerbals+" outstanding";
 };
 
 // Global changes
