@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.6
+// @version      1.7
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -13,7 +13,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.6 - Swapped exclude/include
+// Release notes: 1.7 - Added scroll-to-top button
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -117,3 +117,28 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var expertProfilePageTitle = document.title;
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
 };
+
+// Global changes
+
+// Scroll to top button in bottom left
+var backToTopCss = document.createElement("style");
+backToTopCss.type = "text/css";
+backToTopCss.innerHTML = "#backToTopDiv { position:fixed;bottom:10px;right:10px;display:block;z-index:20000; } .scrollToTop{ background: whiteSmoke; text-decoration: none; position:fixed; display:none; } .scrollToTop:hover{ text-decoration:none; }";
+document.body.appendChild(backToTopCss);
+var backToTop = document.createElement("div");
+backToTop.innerHTML = '<a href="#" class="scrollToTop"><img src="http://i.imgur.com/jcHVeh6.png" height="30px" width="30px" /></a>';
+backToTop.id = "backToTopDiv";
+document.body.appendChild(backToTop);
+$(document).ready(function(){
+	$(window).scroll(function(){
+		if ($(this).scrollTop() > 100) {
+			$('.scrollToTop').fadeIn();
+		} else {
+			$('.scrollToTop').fadeOut();
+		}
+	});
+	$('.scrollToTop').click(function(){
+		$('html, body').animate({scrollTop : 0},800);
+		return false;
+	});
+});
