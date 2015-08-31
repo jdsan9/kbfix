@@ -1,17 +1,18 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.3
+// @version      1.4
 // @description  See comments for change list
 // @author       You
 // @match        https://www.crgstaff.com/*
 // @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
+// @exclude      https://www.crgstaff.com/Projects/EditAdvisorSearch.aspx*
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.3 - Auto-Update release
+// Release notes: 1.4 - Advisor search fixed
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -114,7 +115,4 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Display relevant title information first
     var expertProfilePageTitle = document.title;
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
-    
-} else {
-    return false;
 };
