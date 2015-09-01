@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.8.1
+// @version      1.9.0
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,7 +14,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.8.1 - Compatibility fix for page identification
+// Release notes: 1.9.0 - Project counts & logo update
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -108,6 +108,19 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     currentProjectsCss.innerHTML = "#main_projectsBrowseView_ctl00_trProjects > td > table > tbody > tr > td > div:nth-of-type(2) { height:inherit !important; }";
     document.body.appendChild(currentProjectsCss);
 
+    //Projects count
+    var findInCurrents = document.getElementById("main_projectsBrowseView_ctl00_gvProjects_DXMainTable").innerHTML;
+    var countPriority = findInCurrents.split("Priority").length-1
+    var countActive = findInCurrents.split("Active").length-1
+    var floatingProjectCount = document.createElement("div");
+    floatingProjectCount.innerHTML = "Priority: "+countPriority+" | Active: "+countActive;
+    floatingProjectCount.id = "floatingProjectCountDiv";
+    document.body.appendChild(floatingProjectCount);
+    var floatingProjectCountCss = document.createElement("style");
+    floatingProjectCountCss.type = "text/css";
+    floatingProjectCountCss.innerHTML = "#floatingProjectCountDiv { position:fixed;top:20px;right:25px;display:block;z-index:10000;font-weight:bold; }";
+    document.body.appendChild(floatingProjectCountCss);
+
     // Actual page title
     document.title = "Current Projects";
     
@@ -154,3 +167,6 @@ $(document).ready(function(){
 		return false;
 	});
 });
+
+// New KB logo
+document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/E5crOEUm.jpg";
