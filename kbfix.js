@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.9.2
+// @version      1.9.3
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,7 +14,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.9.2 - Cleaned up style of project page top bar
+// Release notes: 1.9.3 - Fixed functionality of scrollbar removal on subsequent pages of expert search
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -83,14 +83,17 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         leadTableBorder.style.border = "none";
     } else if (document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain")) {
         // expert search
-        var expertSearchBorderOuter = document.getElementById("main_main_tbcAll_Placeholder_Project_AdvisorSearch");
-        expertSearchBorderOuter.style.border = "none";
-        expertSearchBorderOuter.style.height = "inherit";
-        var expertSearchBorderInner = document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain");
-        expertSearchBorderInner.style.border = "none";
-        expertSearchBorderInner.style.height = "inherit";
-        var expertSearchTable = document.getElementById("main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid_ctl00__gridAdvisors_DXMainTable").parentNode;
-        expertSearchTable.style.height = "inherit";
+        function expertSearchPageChange () {
+            var expertSearchBorderOuter = document.getElementById("main_main_tbcAll_Placeholder_Project_AdvisorSearch");
+            expertSearchBorderOuter.style.border = "none";
+            expertSearchBorderOuter.style.height = "inherit";
+            var expertSearchBorderInner = document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain");
+            expertSearchBorderInner.style.border = "none";
+            expertSearchBorderInner.style.height = "inherit";
+            var expertSearchTable = document.getElementById("main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid_ctl00__gridAdvisors_DXMainTable").parentElement;
+            expertSearchTable.style.height = "inherit";
+        };
+        document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
     } else if (document.getElementById("main_main_tbcAllProject_Experts_pnlExperts")) {
         // experts
         var expertFrame = document.getElementById("main_main_tbcAllProject_Experts_pnlExperts");
