@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.8.0
+// @version      1.8.1
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,7 +14,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.8.0 - Added verbal count on overview
+// Release notes: 1.8.1 - Compatibility fix for page identification
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -89,7 +89,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         expertSearchBorderInner.style.height = "inherit";
         var expertSearchTable = document.getElementById("main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid_ctl00__gridAdvisors_DXMainTable").parentNode;
         expertSearchTable.style.height = "inherit";
-    } else {
+    } else if (document.getElementById("main_main_tbcAllProject_Experts_pnlExperts")) {
         // experts
         var expertFrame = document.getElementById("main_main_tbcAllProject_Experts_pnlExperts");
         expertFrame.style.height = "100%";
@@ -122,10 +122,12 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Overview page changes
     
     // Verbals count
-    var verbalString = "gvVerbals_DXDataRow";
-    var findSource = document.getElementsByTagName('html')[0].innerHTML;
-    var numVerbals = findSource.split(verbalString).length-1
-    document.querySelector("#main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0").innerText = "MY VERBALS | "+numVerbals+" outstanding";
+    if (document.getElementById("main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0")) {
+        var verbalString = "gvVerbals_DXDataRow";
+        var findSource = document.getElementsByTagName('html')[0].innerHTML;
+        var numVerbals = findSource.split(verbalString).length-1
+        document.querySelector("#main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0").innerText = "MY VERBALS | "+numVerbals+" outstanding";
+    };
 };
 
 // Global changes
