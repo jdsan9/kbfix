@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.9.1
+// @version      1.9.2
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,7 +14,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.9.1 - Added https flag for upscroll image
+// Release notes: 1.9.2 - Cleaned up style of project page top bar
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -22,8 +22,10 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Floating project toolbar
     var floatingToolbarCss = document.createElement("style");
     floatingToolbarCss.type = "text/css";
-    floatingToolbarCss.innerHTML = ".masterContent > table > tbody > tr:nth-of-type(1) { position:fixed;top:52px;width:100%;display:block;background-color:lemonchiffon;z-index:100; }";
+    floatingToolbarCss.innerHTML = ".masterContent > table > tbody > tr:nth-of-type(1) { position:fixed;top:52px;left:0px;width:100%;display:block;border-bottom:black 1px solid;box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:100; }";
     document.body.appendChild(floatingToolbarCss);
+    var topSpacerHeight = document.querySelector("#_spacerDiv");
+    topSpacerHeight.style.height = "68px";
 
     // Extend project info box
     function findFirstDescendantById(parent, tagname)
