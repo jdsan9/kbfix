@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.9.3
+// @version      1.10.0
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,10 +11,11 @@
 // @include      https://www.crgstaff.com/Projects/CurrentProjects.aspx
 // @include      https://www.crgstaff.com/members/Overview.aspx
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require      https://www.crgadvisors.com/js/nf-mobile/ICanHaz.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.9.3 - Fixed functionality of scrollbar removal on subsequent pages of expert search
+// Release notes: 1.10.0 - Added ICanHaz lib dependency
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
