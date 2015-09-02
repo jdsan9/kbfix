@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.10.0
+// @version      1.10.1
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -15,7 +15,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.10.0 - Added ICanHaz lib dependency
+// Release notes: 1.10.1 - Removed researcher password autofill on expert edit pages
 
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
@@ -147,6 +147,14 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var numVerbals = findSource.split(verbalString).length-1
         document.querySelector("#main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0").innerText = "MY VERBALS | "+numVerbals+" outstanding";
     };
+
+} else if(document.URL.indexOf("AddEditMember.aspx") >= 0) {
+    // Add & Edit Member page changes
+    
+    // Prevent autofilling researcher password
+    var stopUsingMyPassword = document.getElementById("main__addEditViewAdvisor__tabAdvisorEdit__txtPassword_I");
+    stopUsingMyPassword.type = "text";
+	
 };
 
 // Global changes
