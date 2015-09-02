@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.10.2
+// @version      1.11.0
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.10.2 - Modified jQuery handling and bugfix for floating project bar
+// Release notes: 1.11.0 - Update Projects page!
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -188,5 +188,21 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Prevent autofilling researcher password
     var stopUsingMyPassword = document.getElementById("main__addEditViewAdvisor__tabAdvisorEdit__txtPassword_I");
     stopUsingMyPassword.type = "text";
+    
+} else if(document.URL.indexOf("UpdateProject.aspx") >= 0) {
+    // Update Projects page
+    
+    // Remove project descriptions
+    var killUpdateDescription = document.createElement("style");
+    killUpdateDescription.type = "text/css";
+    killUpdateDescription.innerHTML = "#main_p > table > tbody > tr > td:nth-of-type(1) > table > tbody > tr:nth-of-type(4) { display:none !important; }";
+    document.body.appendChild(killUpdateDescription);
+    
+    // Remove inner scroll
+    var updateProjectsFrame = document.getElementById("main_p");
+    updateProjectsFrame.style.height = "inherit";
+    
+    // Actual page title
+    document.title = "Update Projects";
     
 };
