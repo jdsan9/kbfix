@@ -1,22 +1,55 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.10.1
+// @version      1.10.2
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
-// @include      https://www.crgstaff.com/Projects/ProjectDetail_Tabbed.aspx*
-// @include      https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx*
-// @include      https://www.crgstaff.com/Projects/CurrentProjects.aspx
-// @include      https://www.crgstaff.com/members/Overview.aspx
-// @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @include      https://www.crgstaff.com/*
 // @require      https://www.crgadvisors.com/js/nf-mobile/ICanHaz.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.10.1 - Removed researcher password autofill on expert edit pages
+// Release notes: 1.10.2 - Modified jQuery handling and bugfix for floating project bar
 
+// Check for jQuery on init
+if(!window.jQuery) {
+   var loadIt = document.createElement('script');
+   loadIt.type = "text/javascript";
+   loadIt.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js";
+   document.getElementsByTagName('head')[0].appendChild(loadIt);
+}
+
+// Global changes
+
+// Scroll to top button in bottom left
+var backToTopCss = document.createElement("style");
+backToTopCss.type = "text/css";
+backToTopCss.innerHTML = "#backToTopDiv { position:fixed;bottom:10px;right:10px;display:block;z-index:20000; } .scrollToTop{ background: whiteSmoke; text-decoration: none; display:none; } .scrollToTop:hover{ text-decoration:none; }";
+document.body.appendChild(backToTopCss);
+var backToTop = document.createElement("div");
+backToTop.innerHTML = '<a href="#" class="scrollToTop"><img src="https://i.imgur.com/jcHVeh6.png" height="30px" width="30px" /></a>';
+backToTop.id = "backToTopDiv";
+document.body.appendChild(backToTop);
+$(document).ready(function(){
+	$(window).scroll(function(){
+		if ($(this).scrollTop() > 100) {
+			$('.scrollToTop').fadeIn();
+		} else {
+			$('.scrollToTop').fadeOut();
+		}
+	});
+	$('.scrollToTop').click(function(){
+		$('html, body').animate({scrollTop : 0},800);
+		return false;
+	});
+});
+
+// New KB logo
+document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/E5crOEUm.jpg";
+
+// Page-specific changes
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Project page changes
     
@@ -25,8 +58,9 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     floatingToolbarCss.type = "text/css";
     floatingToolbarCss.innerHTML = ".masterContent > table > tbody > tr:nth-of-type(1) { position:fixed;top:52px;left:0px;width:100%;display:block;border-bottom:black 1px solid;box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:100; }";
     document.body.appendChild(floatingToolbarCss);
-    var topSpacerHeight = document.querySelector("#_spacerDiv");
-    topSpacerHeight.style.height = "68px";
+    var topSpacerHeight = document.querySelector('.masterContent');
+    topSpacerHeight.style.position = "relative";
+    topSpacerHeight.style.top = "16px";
 
     // Extend project info box
     function findFirstDescendantById(parent, tagname)
@@ -48,7 +82,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.body.appendChild(floatingProjectName);
     var floatingProjectNameCss = document.createElement("style");
     floatingProjectNameCss.type = "text/css";
-    floatingProjectNameCss.innerHTML = "#floatingProjectNameDiv { position:fixed;top:18px;right:25px;display:block;z-index:10000; }";
+    floatingProjectNameCss.innerHTML = "#floatingProjectNameDiv { position:fixed;top:8px;right:10px;display:block;z-index:10000; }";
     document.body.appendChild(floatingProjectNameCss);
 
     // Pin tab menu to top bar when scrolled past via jQuery
@@ -154,33 +188,5 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Prevent autofilling researcher password
     var stopUsingMyPassword = document.getElementById("main__addEditViewAdvisor__tabAdvisorEdit__txtPassword_I");
     stopUsingMyPassword.type = "text";
-	
+    
 };
-
-// Global changes
-
-// Scroll to top button in bottom left
-var backToTopCss = document.createElement("style");
-backToTopCss.type = "text/css";
-backToTopCss.innerHTML = "#backToTopDiv { position:fixed;bottom:10px;right:10px;display:block;z-index:20000; } .scrollToTop{ background: whiteSmoke; text-decoration: none; display:none; } .scrollToTop:hover{ text-decoration:none; }";
-document.body.appendChild(backToTopCss);
-var backToTop = document.createElement("div");
-backToTop.innerHTML = '<a href="#" class="scrollToTop"><img src="https://i.imgur.com/jcHVeh6.png" height="30px" width="30px" /></a>';
-backToTop.id = "backToTopDiv";
-document.body.appendChild(backToTop);
-$(document).ready(function(){
-	$(window).scroll(function(){
-		if ($(this).scrollTop() > 100) {
-			$('.scrollToTop').fadeIn();
-		} else {
-			$('.scrollToTop').fadeOut();
-		}
-	});
-	$('.scrollToTop').click(function(){
-		$('html, body').animate({scrollTop : 0},800);
-		return false;
-	});
-});
-
-// New KB logo
-document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/E5crOEUm.jpg";
