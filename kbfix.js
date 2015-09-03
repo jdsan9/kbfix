@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.2
+// @version      1.11.3
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.2 - Updated KB logo
+// Release notes: 1.11.3 - Expert password field bugfix & user variable init
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -20,6 +20,19 @@ if(!window.jQuery) {
    loadIt.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js";
    document.getElementsByTagName('head')[0].appendChild(loadIt);
 }
+
+// Init user variables
+var userLoginNameLoc = document.querySelector("#_panelMenu__lblWelcome");
+var userLoginNameText = userLoginNameLoc.innerText;
+var userLoginName = userLoginNameText.replace("Welcome ", "");
+if (userLoginName == "jsanders") var userIdTag = "Sanders, J.";
+if (userLoginName == "parmes") var userIdTag = "Armes, P.";
+if (userLoginName == "khuynh") var userIdTag = "Huynh, K.";
+if (userLoginName == "swinter") var userIdTag = "Winter, S.";
+if (userLoginName == "jforman") var userIdTag = "Forman, J.";
+if (userLoginName == "jparrish") var userIdTag = "Parrish, J.";
+if (userLoginName == "lfarquhar") var userIdTag = "Farquhar, L.";
+if (userLoginName == "ksanders") var userIdTag = "Sanders, K.";
 
 // Global changes
 
@@ -50,8 +63,8 @@ $(document).ready(function(){
 document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/6LFyPDi.png";
 
 // Page-specific changes
-if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
-    // Project page changes
+if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){ 
+// Project page changes
     
     // Floating project toolbar
     var floatingToolbarCss = document.createElement("style");
@@ -61,6 +74,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var topSpacerHeight = document.querySelector('.masterContent');
     topSpacerHeight.style.position = "relative";
     topSpacerHeight.style.top = "16px";
+    var projectDetailTitle = document.querySelector(".pageTitle");
+    projectDetailTitle.textContent = "Project Tools and Resources";
 
     // Extend project info box
     function findFirstDescendantById(parent, tagname)
@@ -146,7 +161,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     };
 
 } else if(document.URL.indexOf("CurrentProjects.aspx") >= 0) {
-    // Current Projects page changes
+// Current Projects page changes
     
     // Remove inner vertical scroll on projects list
     var currentProjectsFrame = document.getElementById("main_projectsBrowseView_ctl00_gvProjects_DXMainTable");
@@ -173,14 +188,14 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.title = "Current Projects";
     
 } else if(document.URL.indexOf("MemberProfile_Tabbed.aspx") >= 0) {
-    // Expert Profile page changes
+// Expert Profile page changes
     
     // Display relevant title information first
     var expertProfilePageTitle = document.title;
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
-    // Overview page changes
+// Overview page changes
     
     // Verbals count
     if (document.getElementById("main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0")) {
@@ -196,6 +211,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Prevent autofilling researcher password
     var stopUsingMyPassword = document.getElementById("main__addEditViewAdvisor__tabAdvisorEdit__txtPassword_I");
     stopUsingMyPassword.type = "text";
+    stopUsingMyPassword.style.display = "none";
     
 } else if(document.URL.indexOf("UpdateProject.aspx") >= 0) {
     // Update Projects page
