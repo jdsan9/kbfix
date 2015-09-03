@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.1
+// @version      1.11.2
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.1 - Sum displayed leads on recruiting page
+// Release notes: 1.11.2 - Updated KB logo
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -47,7 +47,7 @@ $(document).ready(function(){
 });
 
 // New KB logo
-document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/E5crOEUm.jpg";
+document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/6LFyPDi.png";
 
 // Page-specific changes
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
