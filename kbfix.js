@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.0
+// @version      1.11.1
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.0 - Update Projects page!
+// Release notes: 1.11.1 - Sum displayed leads on recruiting page
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -90,7 +90,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     pinnedTabMenuCss.type = "text/css";
     pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 70px; }";
     document.body.appendChild(pinnedTabMenuCss);
-
     var $window = $(window),
         $stickyEl = $('#main_main_tbcAll_ulTabContainer'),
         elTop = $stickyEl.offset().top;
@@ -108,7 +107,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.getElementsByTagName("table")[allTablesProjPageIndex - 1].style.display = "none";
     document.getElementsByTagName("table")[allTablesProjPageIndex - 2].style.display = "none";
     if (document.getElementById("main_main_tbcAllProject_Leads_pnlLeads")) {
-        // recruits
+        // Recruits
         var leadFrame = document.getElementById("main_main_tbcAllProject_Leads_pnlLeads");
         leadFrame.style.height = "100%";
         leadFrame.style.border = "none";
@@ -116,8 +115,17 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         leadFrameBorder.style.border = "none";
         var leadTableBorder = document.getElementById("main_main_tbcAllProject_Leads_rptLeads_tblRepeater");
         leadTableBorder.style.border = "none";
+        
+        // Count displayed
+        var recruitCountLoc = document.querySelector(".recordTotla");
+        var recruitCount = recruitCountLoc.textContent;
+        var findInSource = document.getElementsByTagName('html')[0].innerHTML;
+        var numRecruits = "main_main_tbcAllProject_Leads_rptLeads_trNote";
+        var recruitCountDisplayed = findInSource.split(numRecruits).length-1;
+        recruitCountLoc.textContent = recruitCount+" | "+recruitCountDisplayed+" Displayed";
+        
     } else if (document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain")) {
-        // expert search
+        // Expert search
         function expertSearchPageChange () {
             var expertSearchBorderOuter = document.getElementById("main_main_tbcAll_Placeholder_Project_AdvisorSearch");
             expertSearchBorderOuter.style.border = "none";
@@ -130,7 +138,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         };
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
     } else if (document.getElementById("main_main_tbcAllProject_Experts_pnlExperts")) {
-        // experts
+        // Experts
         var expertFrame = document.getElementById("main_main_tbcAllProject_Experts_pnlExperts");
         expertFrame.style.height = "100%";
         var expertFrameBorder = document.getElementById("main_main_tbcAll_Placeholder_Project_Experts");
@@ -178,7 +186,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     if (document.getElementById("main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0")) {
         var verbalString = "gvVerbals_DXDataRow";
         var findSource = document.getElementsByTagName('html')[0].innerHTML;
-        var numVerbals = findSource.split(verbalString).length-1
+        var numVerbals = findSource.split(verbalString).length-1;
         document.querySelector("#main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0").innerText = "MY VERBALS | "+numVerbals+" outstanding";
     };
 
