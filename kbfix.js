@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.3
+// @version      1.11.4
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.3 - Expert password field bugfix & user variable init
+// Release notes: 1.11.4 - Commented user variable init during debug
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -22,6 +22,7 @@ if(!window.jQuery) {
 }
 
 // Init user variables
+/* Holding during FF debugging
 var userLoginNameLoc = document.querySelector("#_panelMenu__lblWelcome");
 var userLoginNameText = userLoginNameLoc.innerText;
 var userLoginName = userLoginNameText.replace("Welcome ", "");
@@ -33,6 +34,7 @@ if (userLoginName == "jforman") var userIdTag = "Forman, J.";
 if (userLoginName == "jparrish") var userIdTag = "Parrish, J.";
 if (userLoginName == "lfarquhar") var userIdTag = "Farquhar, L.";
 if (userLoginName == "ksanders") var userIdTag = "Sanders, K.";
+*/
 
 // Global changes
 
