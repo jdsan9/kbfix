@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.5
+// @version      1.11.6
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.5 - Sticky scroll on expert search tab tools
+// Release notes: 1.11.6 - Sticky scroll on expert search tab tools bug fix
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -155,20 +155,16 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         };
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
         
-        // Float search toolbar when scrolled past
-        var pinnedSearchToolsCss = document.createElement("style");
-        pinnedSearchToolsCss.type = "text/css";
-        pinnedSearchToolsCss.innerHTML = "#main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid > table:nth-of-type(5).pinned { position: fixed;top: 68px;left: 0px;border-bottom: 1px solid black;z-index: 100;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 100px !important; }";
-        document.body.appendChild(pinnedSearchToolsCss);
+	// Float search toolbar when scrolled past
+        pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 100px; } table.pinned { position: fixed;top: 68px;left: 0px;border-bottom: 1px solid black;z-index: 100;width: 100%;background-color: #F7F7F7; }";
+        var tableExSearch = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "table");
+        tableExSearch.id = "exSearchToolbar";
         var $window2 = $(window),
-            $stickyEl2 = $('#main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid > table:nth-of-type(5)'),
-           elTop2 = $stickyEl2.offset().top;
-        $window.scroll(function() {
+            $stickyEl2 = $('#main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid').children().eq(19),
+            elTop2 = $stickyEl2.offset().top;
+        $window2.scroll(function() {
             $stickyEl2.toggleClass('pinned', $window2.scrollTop() > elTop2);
         });
-
-        
-        
         
     } else if (document.getElementById("main_main_tbcAllProject_Experts_pnlExperts")) {
         // Experts scrollbar
