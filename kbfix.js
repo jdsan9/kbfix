@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.4
+// @version      1.11.5
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.4 - Commented user variable init during debug
+// Release notes: 1.11.5 - Sticky scroll on expert search tab tools
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -118,13 +118,13 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var projectPageTitle = document.title;
     document.title = projectPageTitle.replace("Project Detail - ", "");
 
-    // Override recruit & expert & expert search frames scrollbar
+    // Tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
     var allTablesProjPageIndex = allTablesProjPage.length;
     document.getElementsByTagName("table")[allTablesProjPageIndex - 1].style.display = "none";
     document.getElementsByTagName("table")[allTablesProjPageIndex - 2].style.display = "none";
     if (document.getElementById("main_main_tbcAllProject_Leads_pnlLeads")) {
-        // Recruits
+        // Recruits scrollbar
         var leadFrame = document.getElementById("main_main_tbcAllProject_Leads_pnlLeads");
         leadFrame.style.height = "100%";
         leadFrame.style.border = "none";
@@ -142,7 +142,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         recruitCountLoc.textContent = recruitCount+" | "+recruitCountDisplayed+" Displayed";
         
     } else if (document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain")) {
-        // Expert search
+        // Expert search scrollbar
         function expertSearchPageChange () {
             var expertSearchBorderOuter = document.getElementById("main_main_tbcAll_Placeholder_Project_AdvisorSearch");
             expertSearchBorderOuter.style.border = "none";
@@ -154,8 +154,24 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
             expertSearchTable.style.height = "inherit";
         };
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
+        
+        // Float search toolbar when scrolled past
+        var pinnedSearchToolsCss = document.createElement("style");
+        pinnedSearchToolsCss.type = "text/css";
+        pinnedSearchToolsCss.innerHTML = "#main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid > table:nth-of-type(5).pinned { position: fixed;top: 68px;left: 0px;border-bottom: 1px solid black;z-index: 100;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 100px !important; }";
+        document.body.appendChild(pinnedSearchToolsCss);
+        var $window2 = $(window),
+            $stickyEl2 = $('#main_main_tbcAllProject_AdvisorSearch__grid__advisorGrid > table:nth-of-type(5)'),
+           elTop2 = $stickyEl2.offset().top;
+        $window.scroll(function() {
+            $stickyEl2.toggleClass('pinned', $window2.scrollTop() > elTop2);
+        });
+
+        
+        
+        
     } else if (document.getElementById("main_main_tbcAllProject_Experts_pnlExperts")) {
-        // Experts
+        // Experts scrollbar
         var expertFrame = document.getElementById("main_main_tbcAllProject_Experts_pnlExperts");
         expertFrame.style.height = "100%";
         var expertFrameBorder = document.getElementById("main_main_tbcAll_Placeholder_Project_Experts");
@@ -213,7 +229,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Prevent autofilling researcher password
     var stopUsingMyPassword = document.getElementById("main__addEditViewAdvisor__tabAdvisorEdit__txtPassword_I");
     stopUsingMyPassword.type = "text";
-    stopUsingMyPassword.style.display = "none";
     
 } else if(document.URL.indexOf("UpdateProject.aspx") >= 0) {
     // Update Projects page
