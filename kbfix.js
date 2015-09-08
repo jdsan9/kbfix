@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.6
+// @version      1.11.7
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,7 +11,7 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.6 - Sticky scroll on expert search tab tools bug fix
+// Release notes: 1.11.7 - Style changes on sticky tab headers
 
 // Check for jQuery on init
 if(!window.jQuery) {
@@ -105,7 +105,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Pin tab menu to top bar when scrolled past via jQuery
     var pinnedTabMenuCss = document.createElement("style");
     pinnedTabMenuCss.type = "text/css";
-    pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 70px; }";
+    pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 57px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:199;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px; } .tabmenu span:hover { background: none;color: black; }";
     document.body.appendChild(pinnedTabMenuCss);
     var $window = $(window),
         $stickyEl = $('#main_main_tbcAll_ulTabContainer'),
@@ -156,7 +156,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
         
 	// Float search toolbar when scrolled past
-        pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 100px; } table.pinned { position: fixed;top: 68px;left: 0px;border-bottom: 1px solid black;z-index: 100;width: 100%;background-color: #F7F7F7; }";
+        pinnedTabMenuCss.innerHTML = "table.pinned { position: fixed;top: 68px;left: 0px;border-bottom: 1px solid black;z-index: 100;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 90px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:199;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px; } .tabmenu span:hover { background: none;color: black; }";
         var tableExSearch = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "table");
         tableExSearch.id = "exSearchToolbar";
         var $window2 = $(window),
