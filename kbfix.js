@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.7
+// @version      1.11.8
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -11,15 +11,10 @@
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
-// Release notes: 1.11.7 - Style changes on sticky tab headers
 
-// Check for jQuery on init
-if(!window.jQuery) {
-   var loadIt = document.createElement('script');
-   loadIt.type = "text/javascript";
-   loadIt.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js";
-   document.getElementsByTagName('head')[0].appendChild(loadIt);
-}
+var kbfixver = "1.11.8";
+// Release notes: Expert search bugfix and general script cleanup
+
 
 // Init user variables
 /* Holding during FF debugging
@@ -35,6 +30,7 @@ if (userLoginName == "jparrish") var userIdTag = "Parrish, J.";
 if (userLoginName == "lfarquhar") var userIdTag = "Farquhar, L.";
 if (userLoginName == "ksanders") var userIdTag = "Sanders, K.";
 */
+
 
 // Global changes
 
@@ -64,6 +60,10 @@ $(document).ready(function(){
 // New KB logo
 document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/6LFyPDi.png";
 
+// Display current version
+$("#_panelMenu__imgLogo").after("<div id='kbfixver' style='display:inline;vertical-align:top;font-size:7px;'>v"+kbfixver+"</div>");
+
+
 // Page-specific changes
 if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){ 
 // Project page changes
@@ -80,8 +80,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDetailTitle.textContent = "Project Tools and Resources";
 
     // Extend project info box
-    function findFirstDescendantById(parent, tagname)
-    {
+    function findFirstDescendantById(parent, tagname) {
        parent = document.getElementById(parent);
        var descendants = parent.getElementsByTagName(tagname);
        if ( descendants.length )
@@ -105,13 +104,13 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Pin tab menu to top bar when scrolled past via jQuery
     var pinnedTabMenuCss = document.createElement("style");
     pinnedTabMenuCss.type = "text/css";
-    pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 57px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:199;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px; } .tabmenu span:hover { background: none;color: black; }";
+    pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 57px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:199;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
     document.body.appendChild(pinnedTabMenuCss);
     var $window = $(window),
         $stickyEl = $('#main_main_tbcAll_ulTabContainer'),
         elTop = $stickyEl.offset().top;
     $window.scroll(function() {
-        $stickyEl.toggleClass('pinned', $window.scrollTop() > elTop);
+        $stickyEl.toggleClass('pinned', $window.scrollTop() > elTop + 50);
     });
 
     // Display relevant title information first
@@ -156,7 +155,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
         
 	// Float search toolbar when scrolled past
-        pinnedTabMenuCss.innerHTML = "table.pinned { position: fixed;top: 68px;left: 0px;border-bottom: 1px solid black;z-index: 100;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 90px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:199;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px; } .tabmenu span:hover { background: none;color: black; }";
+        pinnedTabMenuCss.innerHTML = "table.pinned { position: fixed;top: 68px;left: 0px;z-index: 205;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 90px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:199;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
         var tableExSearch = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "table");
         tableExSearch.id = "exSearchToolbar";
         var $window2 = $(window),
@@ -185,12 +184,12 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     currentProjectsCss.innerHTML = "#main_projectsBrowseView_ctl00_trProjects > td > table > tbody > tr > td > div:nth-of-type(2) { height:inherit !important; }";
     document.body.appendChild(currentProjectsCss);
 
-    //Projects count
+    // Projects count
     var findInCurrents = document.getElementById("main_projectsBrowseView_ctl00_gvProjects_DXMainTable").innerHTML;
     var countPriority = findInCurrents.split("Priority").length-1
     var countActive = findInCurrents.split("Active").length-1
     var floatingProjectCount = document.createElement("div");
-    floatingProjectCount.innerHTML = "Priority: "+countPriority+" | Active: "+countActive;
+    floatingProjectCount.innerHTML = "<font color='red'>Priority</font>: "+countPriority+" | <font color='orange'>Active</font>: "+countActive;
     floatingProjectCount.id = "floatingProjectCountDiv";
     document.body.appendChild(floatingProjectCount);
     var floatingProjectCountCss = document.createElement("style");
@@ -243,3 +242,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.title = "Update Projects";
     
 };
+
+
+
+// Source signature
+$("html").before("<!-- Injected with KBFix by JS -->");
