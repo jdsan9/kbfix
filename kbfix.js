@@ -1,19 +1,20 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.8
+// @version      1.11.9
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
 // @include      https://www.crgstaff.com/*
+// @exclude      https://www.crgstaff.com/Projects/AddEditProject.aspx*
 // @require      https://www.crgadvisors.com/js/nf-mobile/ICanHaz.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
 
-var kbfixver = "1.11.8";
-// Release notes: Expert search bugfix and general script cleanup
+var kbfixver = "1.11.9";
+// Release notes: Add-Edit Project temp bugfix
 
 
 // Init user variables
@@ -33,6 +34,7 @@ if (userLoginName == "ksanders") var userIdTag = "Sanders, K.";
 
 
 // Global changes
+
 
 // Scroll to top button in bottom left
 var backToTopCss = document.createElement("style");
@@ -123,14 +125,16 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.getElementsByTagName("table")[allTablesProjPageIndex - 1].style.display = "none";
     document.getElementsByTagName("table")[allTablesProjPageIndex - 2].style.display = "none";
     if (document.getElementById("main_main_tbcAllProject_Leads_pnlLeads")) {
-        // Recruits scrollbar
+        // Recruits 
+        
+        // Remove inner scrollbar
         var leadFrame = document.getElementById("main_main_tbcAllProject_Leads_pnlLeads");
         leadFrame.style.height = "100%";
         leadFrame.style.border = "none";
-        var leadFrameBorder = document.getElementById("main_main_tbcAll_Placeholder_Project_Leads");
-        leadFrameBorder.style.border = "none";
-        var leadTableBorder = document.getElementById("main_main_tbcAllProject_Leads_rptLeads_tblRepeater");
-        leadTableBorder.style.border = "none";
+        var leadFrameOuter = document.getElementById("main_main_tbcAll_Placeholder_Project_Leads");
+        leadFrameOuter.style.border = "none";
+        var leadTable = document.getElementById("main_main_tbcAllProject_Leads_rptLeads_tblRepeater");
+        leadTable.style.border = "none";
         
         // Count displayed
         var recruitCountLoc = document.querySelector(".recordTotla");
@@ -140,8 +144,17 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var recruitCountDisplayed = findInSource.split(numRecruits).length-1;
         recruitCountLoc.textContent = recruitCount+" | "+recruitCountDisplayed+" Displayed";
         
+        // Organization! 
+        var leadTbody = leadTable.firstChild;
+        
+        $("#container .item").each(function(idx, elem) {
+            $(elem).addClass("tile" + (idx % 3 + 1));
+        });
+        
     } else if (document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain")) {
-        // Expert search scrollbar
+        // Expert search 
+        
+        // Remove inner scrollbar
         function expertSearchPageChange () {
             var expertSearchBorderOuter = document.getElementById("main_main_tbcAll_Placeholder_Project_AdvisorSearch");
             expertSearchBorderOuter.style.border = "none";
@@ -154,7 +167,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         };
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
         
-	// Float search toolbar when scrolled past
+	    // Float search toolbar when scrolled past
         pinnedTabMenuCss.innerHTML = "table.pinned { position: fixed;top: 68px;left: 0px;z-index: 205;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 90px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:199;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
         var tableExSearch = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "table");
         tableExSearch.id = "exSearchToolbar";
@@ -166,7 +179,9 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         });
         
     } else if (document.getElementById("main_main_tbcAllProject_Experts_pnlExperts")) {
-        // Experts scrollbar
+        // Experts 
+        
+        // Remove inner scrollbar
         var expertFrame = document.getElementById("main_main_tbcAllProject_Experts_pnlExperts");
         expertFrame.style.height = "100%";
         var expertFrameBorder = document.getElementById("main_main_tbcAll_Placeholder_Project_Experts");
@@ -222,8 +237,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Add & Edit Member page changes
     
     // Prevent autofilling researcher password
-    var stopUsingMyPassword = document.getElementById("main__addEditViewAdvisor__tabAdvisorEdit__txtPassword_I");
-    stopUsingMyPassword.type = "text";
+    $( "#form1" ).attr( "autocomplete", "off" );
+    $( "#tblContainer0" ).prepend( '<input style="display:none" type="text" name="fakeusernameremembered"/><input style="display:none" type="password" name="fakepasswordremembered"/>' );
     
 } else if(document.URL.indexOf("UpdateProject.aspx") >= 0) {
     // Update Projects page
@@ -246,4 +261,4 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 
 
 // Source signature
-$("html").before("<!-- Injected with KBFix by JS -->");
+$("html").before("<!-- Injected with KBFix -->");
