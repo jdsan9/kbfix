@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.9
+// @version      1.11.10
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -13,8 +13,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.11.9";
-// Release notes: Add-Edit Project temp bugfix
+var kbfixver = "1.11.10";
+// Release notes: Tweaks to page titles
 
 
 // Init user variables
@@ -36,7 +36,7 @@ if (userLoginName == "ksanders") var userIdTag = "Sanders, K.";
 // Global changes
 
 
-// Scroll to top button in bottom left
+// Scroll to top button in bottom right
 var backToTopCss = document.createElement("style");
 backToTopCss.type = "text/css";
 backToTopCss.innerHTML = "#backToTopDiv { position:fixed;bottom:10px;right:10px;display:block;z-index:20000; } .scrollToTop{ background: whiteSmoke; text-decoration: none; display:none; } .scrollToTop:hover{ text-decoration:none; }";
@@ -118,6 +118,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Display relevant title information first
     var projectPageTitle = document.title;
     document.title = projectPageTitle.replace("Project Detail - ", "");
+    document.title = document.title + " - Knowledge Broker";
 
     // Tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
@@ -144,12 +145,15 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var recruitCountDisplayed = findInSource.split(numRecruits).length-1;
         recruitCountLoc.textContent = recruitCount+" | "+recruitCountDisplayed+" Displayed";
         
-        // Organization! 
-        var leadTbody = leadTable.firstChild;
-        
-        $("#container .item").each(function(idx, elem) {
+        // Rank drop down
+        var leadTableDig1 = leadTable.firstChild;
+        leadTableDig1.id = "leadContainer";
+        var leadTableDig2 = leadTableDig1.firstChild;
+        var leadTableMotherlode = leadTableDig2;
+        $("#leadContainer tr").each(function(idx, elem) {
             $(elem).addClass("tile" + (idx % 3 + 1));
         });
+        
         
     } else if (document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain")) {
         // Expert search 
@@ -213,7 +217,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.body.appendChild(floatingProjectCountCss);
 
     // Actual page title
-    document.title = "Current Projects";
+    document.title = "Current Projects - Knowledge Broker";
     
 } else if(document.URL.indexOf("MemberProfile_Tabbed.aspx") >= 0) {
 // Expert Profile page changes
@@ -221,6 +225,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Display relevant title information first
     var expertProfilePageTitle = document.title;
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
+    document.title = document.title + " - Knowledge Broker";
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
@@ -236,9 +241,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 } else if(document.URL.indexOf("AddEditMember.aspx") >= 0) {
     // Add & Edit Member page changes
     
-    // Prevent autofilling researcher password
+    // Prevent autofilling researcher password [not working]
     $( "#form1" ).attr( "autocomplete", "off" );
-    $( "#tblContainer0" ).prepend( '<input style="display:none" type="text" name="fakeusernameremembered"/><input style="display:none" type="password" name="fakepasswordremembered"/>' );
     
 } else if(document.URL.indexOf("UpdateProject.aspx") >= 0) {
     // Update Projects page
@@ -255,6 +259,23 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     
     // Actual page title
     document.title = "Update Projects";
+    
+} else if(document.URL.indexOf("SearchResults.aspx") >= 0) {
+    // Apollo Search page
+    
+    // Counter search term obfuscation in title
+    var projectPageTitle = document.title;
+    document.title = projectPageTitle.replace("Apollo Keyword Search - ", "");
+    document.title = document.title + " - Knowledge Broker";
+    
+    // Remove inner scroll
+    function searchResultsExpand () {
+        var searchResults = document.getElementById("main__grid__advisorGrid_ctl00__gridAdvisors_DXMainTable");
+        var searchResults = searchResults.parentElement;
+        searchResults.style.height = "inherit !important";
+    };
+    document.addEventListener("load", searchResultsExpand);
+    document.addEventListener("mousemove", searchResultsExpand);
     
 };
 
