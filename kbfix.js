@@ -1,20 +1,22 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.11
+// @version      1.11.12
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
 // @include      https://www.crgstaff.com/*
+// @include      https://crgstaff.com/*
 // @exclude      https://www.crgstaff.com/Projects/AddEditProject.aspx*
+// @exclude      https://crgstaff.com/Projects/AddEditProject.aspx*
 // @require      https://www.crgadvisors.com/js/nf-mobile/ICanHaz.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
 
-var kbfixver = "1.11.11";
-// Release notes: Priority bugfix for return to top button
+var kbfixver = "1.11.12";
+// Release notes: Edited includes/excludes to ignore subdomain
 
 
 // Init user variables
