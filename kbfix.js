@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.12
+// @version      1.11.13
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -15,7 +15,7 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.11.12";
+var kbfixver = "1.11.13";
 // Release notes: Edited includes/excludes to ignore subdomain
 
 
@@ -244,7 +244,11 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Add & Edit Member page changes
     
     // Prevent autofilling researcher password [not working]
-    $( "#form1" ).attr( "autocomplete", "off" );
+    // $( "#form1" ).attr( "autocomplete", "off" );
+    
+    // Hide "Save and Email" button [awkward misclick]
+    var hideSaveAndEmail = document.getElementById("main__addEditViewAdvisor__btnSaveAndEmail");
+    hideSaveAndEmail.style.display = "none";
     
 } else if(document.URL.indexOf("UpdateProject.aspx") >= 0) {
     // Update Projects page
