@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.11.13
+// @version      1.12.0
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -10,13 +10,12 @@
 // @include      https://crgstaff.com/*
 // @exclude      https://www.crgstaff.com/Projects/AddEditProject.aspx*
 // @exclude      https://crgstaff.com/Projects/AddEditProject.aspx*
-// @require      https://www.crgadvisors.com/js/nf-mobile/ICanHaz.min.js
 // @downloadURL  https://raw.githubusercontent.com/jdsan9/kbfix/master/kbfix.js
 // ==/UserScript==
 
 
-var kbfixver = "1.11.13";
-// Release notes: Edited includes/excludes to ignore subdomain
+var kbfixver = "1.12.0";
+// Release notes: Added reclusion countermeasure for project description box
 
 
 // Init user variables
@@ -121,6 +120,12 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var projectPageTitle = document.title;
     document.title = projectPageTitle.replace("Project Detail - ", "");
     document.title = document.title + " - Knowledge Broker";
+    
+    // Prevent leftward reclusion of project description box
+    var stopHidingOnLeft = document.createElement("style");
+    stopHidingOnLeft.type = "text/css";
+    stopHidingOnLeft.innerHTML = "div { text-indent: inherit !important; }";
+    document.body.appendChild(stopHidingOnLeft);
 
     // Tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
