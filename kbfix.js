@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.13.2
+// @version      1.13.3
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.13.2";
-// Release notes: Included default ID values for Add Prospects page
+var kbfixver = "1.13.3";
+// Release notes: Add Prospect defaults reverted to debug
 
 
 // Init user variables
@@ -294,6 +294,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Actual page title
     document.title = "Add Prospect";
     
+    /* Hold for debug: finding validation script trigger
     // Set default country - UNITED STATES
     var setDefaultCountry = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_I");
     setDefaultCountry.value = "UNITED STATES";
@@ -323,6 +324,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var setDefaultSourceID = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_VI");
         setDefaultSourceID.value = "151";
     };
+    */
     
 };
 
