@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.13.1
+// @version      1.13.2
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.13.1";
-// Release notes: Holding default values for debug
+var kbfixver = "1.13.2";
+// Release notes: Included default ID values for Add Prospects page
 
 
 // Init user variables
@@ -294,14 +294,17 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Actual page title
     document.title = "Add Prospect";
     
-    /* 
     // Set default country - UNITED STATES
     var setDefaultCountry = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_I");
     setDefaultCountry.value = "UNITED STATES";
+    var setDefaultCountryID = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_VI");
+    setDefaultCountryID.value = "US";
     
     // Set default angle - Industry Expert
     var setDefaultAngle = document.getElementById("main_addProspectControl__roundPanel__ddlAngles_I");
     setDefaultAngle.value = "Industry Expert";
+    var setDefaultAngleID = document.getElementById("main_addProspectControl__roundPanel__ddlAngles_VI");
+    setDefaultAngleID.value = "8";
     
     // Logic for non-recruiter sources
     var userLoginNameLoc = document.querySelector("#_panelMenu__lblWelcome");
@@ -311,12 +314,15 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         // Set default source - LinkedIn
         var setDefaultSource = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_I");
         setDefaultSource.value = "LinkedIn";
+        var setDefaultSourceID = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_VI");
+        setDefaultSourceID.value = "8";
     } else {
         // Set default source - Recruiter Corporate
         var setDefaultSource = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_I");
         setDefaultSource.value = "Recruiter Corporate";
+        var setDefaultSourceID = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_VI");
+        setDefaultSourceID.value = "151";
     };
-    */
     
 };
 
