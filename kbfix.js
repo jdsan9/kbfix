@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.12.0
+// @version      1.13.0
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.12.0";
-// Release notes: Added reclusion countermeasure for project description box
+var kbfixver = "1.13.0";
+// Release notes: Assigned default values on Add Prospect page
 
 
 // Init user variables
@@ -287,6 +287,34 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     };
     document.addEventListener("load", searchResultsExpand);
     document.addEventListener("mousemove", searchResultsExpand);
+    
+} else if(document.URL.indexOf("AddProspect.aspx") >= 0){
+    // Add Prospect page
+    
+    // Actual page title
+    document.title = "Add Prospect";
+    
+    // Set default country - UNITED STATES
+    var setDefaultCountry = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_I");
+    setDefaultCountry.value = "UNITED STATES";
+    
+    // Set default angle - Industry Expert
+    var setDefaultAngle = document.getElementById("main_addProspectControl__roundPanel__ddlAngles_I");
+    setDefaultAngle.value = "Industry Expert";
+    
+    // Logic for non-recruiter sources
+    var userLoginNameLoc = document.querySelector("#_panelMenu__lblWelcome");
+    var userLoginNameText = userLoginNameLoc.innerText;
+    var userLoginName = userLoginNameText.replace("Welcome ", "");
+    if (userLoginName == "parmes") {
+        // Set default source - LinkedIn
+        var setDefaultSource = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_I");
+        setDefaultSource.value = "LinkedIn";
+    } else {
+        // Set default source - Recruiter Corporate
+        var setDefaultSource = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_I");
+        setDefaultSource.value = "Recruiter Corporate";
+    };
     
 };
 
