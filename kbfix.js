@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.13.3
+// @version      1.13.4
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.13.3";
-// Release notes: Add Prospect defaults reverted to debug
+var kbfixver = "1.13.4";
+// Release notes: Scroll to top removed. Artifacting...
 
 
 // Init user variables
@@ -28,7 +28,6 @@ if (userLoginName == "parmes") var userIdTag = "Armes, P.";
 if (userLoginName == "khuynh") var userIdTag = "Huynh, K.";
 if (userLoginName == "swinter") var userIdTag = "Winter, S.";
 if (userLoginName == "jforman") var userIdTag = "Forman, J.";
-if (userLoginName == "jparrish1") var userIdTag = "Parrish, J.";
 if (userLoginName == "lfarquhar") var userIdTag = "Farquhar, L.";
 if (userLoginName == "ksanders") var userIdTag = "Sanders, K.";
 */
@@ -36,29 +35,6 @@ if (userLoginName == "ksanders") var userIdTag = "Sanders, K.";
 
 // Global changes
 
-
-// Scroll to top button in bottom right
-var backToTopCss = document.createElement("style");
-backToTopCss.type = "text/css";
-backToTopCss.innerHTML = "#scrollToTopDiv { position:fixed;bottom:10px;right:10px;display:block;z-index:20000; } .scrollToTop{ background: whiteSmoke; text-decoration: none; display:none; } .scrollToTop:hover{ text-decoration:none; }";
-document.body.appendChild(backToTopCss);
-var backToTop = document.createElement("div");
-backToTop.innerHTML = '<a href="#" class="scrollToTop"><img src="https://i.imgur.com/jcHVeh6.png" height="30px" width="30px" /></a>';
-backToTop.id = "scrollToTopDiv";
-document.body.appendChild(backToTop);
-$(document).ready(function(){
-	$(window).scroll(function(){
-		if ($(this).scrollTop() > 100) {
-			$('.scrollToTop').fadeIn();
-		} else {
-			$('.scrollToTop').fadeOut();
-		}
-	});
-	$('.scrollToTop').click(function(){
-		$('html, body').animate({scrollTop : 0},800);
-		return false;
-	});
-});
 
 // New KB logo
 document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/6LFyPDi.png";
@@ -202,6 +178,9 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 } else if(document.URL.indexOf("CurrentProjects.aspx") >= 0) {
 // Current Projects page changes
     
+    // Actual page title
+    document.title = "Current Projects - Knowledge Broker";
+    
     // Remove inner vertical scroll on projects list
     var currentProjectsFrame = document.getElementById("main_projectsBrowseView_ctl00_gvProjects_DXMainTable");
     currentProjectsFrame.style.height = "100%";
@@ -222,9 +201,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     floatingProjectCountCss.type = "text/css";
     floatingProjectCountCss.innerHTML = "#floatingProjectCountDiv { position:fixed;top:20px;right:25px;display:block;z-index:10000;font-weight:bold; }";
     document.body.appendChild(floatingProjectCountCss);
-
-    // Actual page title
-    document.title = "Current Projects - Knowledge Broker";
     
 } else if(document.URL.indexOf("MemberProfile_Tabbed.aspx") >= 0) {
 // Expert Profile page changes
