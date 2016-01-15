@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.13.4
+// @version      1.13.5
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.13.4";
-// Release notes: Scroll to top removed. Artifacting...
+var kbfixver = "1.13.5";
+// Release notes: Bug fix from internal deployment - floating project tools bar
 
 
 // Init user variables
@@ -50,7 +50,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Floating project toolbar
     var floatingToolbarCss = document.createElement("style");
     floatingToolbarCss.type = "text/css";
-    floatingToolbarCss.innerHTML = ".masterContent > table > tbody > tr:nth-of-type(1) { position:fixed;top:52px;left:0px;width:100%;display:block;border-bottom:black 1px solid;box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:100; }";
+    floatingToolbarCss.innerHTML = ".kb-main-content > table > tbody > tr:nth-of-type(1) { position:fixed;top:52px;left:0px;width:100%;display:block;border-bottom:black 1px solid;box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:100; }";
     document.body.appendChild(floatingToolbarCss);
     var topSpacerHeight = document.querySelector('.masterContent');
     topSpacerHeight.style.position = "relative";
