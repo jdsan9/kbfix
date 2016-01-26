@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.14.0
+// @version      1.14.1
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.14.0";
-// Release notes: Locked TypeAhead search results & maximised combobulation
+var kbfixver = "1.14.1";
+// Release notes: Bugfix at Expert Profile toolbar
 
 
 // Init user variables
@@ -226,10 +226,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
     document.title = document.title + " - Knowledge Broker";
     
-    // Clear all history note filters on load
-    window.onload=function(){
-        WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$main$main_tbcAllHistory$btnClearAllFilters", "", true, "", "", false, false));
-    };
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
