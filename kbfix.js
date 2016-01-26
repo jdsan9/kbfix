@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.13.5
+// @version      1.14.0
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.13.5";
-// Release notes: Bug fix from internal deployment - floating project tools bar
+var kbfixver = "1.14.0";
+// Release notes: Locked TypeAhead search results & maximised combobulation
 
 
 // Init user variables
@@ -41,6 +41,22 @@ document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/6LFyPD
 
 // Display current version
 $("#_panelMenu__imgLogo").after("<div id='kbfixver' style='display:inline;vertical-align:top;font-size:7px;'>v"+kbfixver+"</div>");
+
+// Remove "KB Search" radio button from TypeAhead
+var kbSearchRadioCss = document.createElement("style");
+kbSearchRadioCss.type = "text/css";
+kbSearchRadioCss.innerHTML = "#_panelMenu__kbtypeahead__popupKBSearch_CSD-1 > table:nth-of-type(1) { display:none !important; }";
+document.body.appendChild(kbSearchRadioCss);
+
+// Make "Loading..." text a bit more interesting
+var loadingLabel = document.querySelector('#_panelMenu__kbtypeahead__loadingKB_TL');
+loadingLabel.textContent = "Combobulating Results Matrix...";
+
+// Lock TypeAhead results position to search box
+var lockTypeAheadPositionCss = document.createElement("style");
+lockTypeAheadPositionCss.type = "text/css";
+lockTypeAheadPositionCss.innerHTML = "#_panelMenu__kbtypeahead__popupKBSearch_PW-1 { top:50px !important; }";
+document.body.appendChild(lockTypeAheadPositionCss);
 
 
 // Page-specific changes
@@ -209,6 +225,11 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var expertProfilePageTitle = document.title;
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
     document.title = document.title + " - Knowledge Broker";
+    
+    // Clear all history note filters on load
+    window.onload=function(){
+        WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$main$main_tbcAllHistory$btnClearAllFilters", "", true, "", "", false, false));
+    };
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
