@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.14.1
+// @version      1.14.2
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.14.1";
-// Release notes: Bugfix at Expert Profile toolbar
+var kbfixver = "1.14.2";
+// Release notes: Bugfix at project count
 
 
 // Init user variables
@@ -207,8 +207,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 
     // Projects count
     var findInCurrents = document.getElementById("main_projectsBrowseView_ctl00_gvProjects_DXMainTable").innerHTML;
-    var countPriority = findInCurrents.split("Priority").length-1
-    var countActive = findInCurrents.split("Active").length-1
+    var countPriority = findInCurrents.split("Priority</label>").length-1
+    var countActive = findInCurrents.split("Active</label>").length-1
     var floatingProjectCount = document.createElement("div");
     floatingProjectCount.innerHTML = "<font color='red'>Priority</font>: "+countPriority+" | <font color='orange'>Active</font>: "+countActive;
     floatingProjectCount.id = "floatingProjectCountDiv";
