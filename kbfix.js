@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KB Updates
 // @namespace    https://crgstaff.com/
-// @version      1.14.2
+// @version      1.14.3
 // @description  Increasing usability of KB. See comments for change list.
 // @author       JS
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "1.14.2";
-// Release notes: Bugfix at project count
+var kbfixver = "1.14.3";
+// Release notes: Bugfix at verbal count
 
 
 // Init user variables
@@ -52,7 +52,7 @@ document.body.appendChild(kbSearchRadioCss);
 var loadingLabel = document.querySelector('#_panelMenu__kbtypeahead__loadingKB_TL');
 loadingLabel.textContent = "Combobulating Results Matrix...";
 
-// Lock TypeAhead results position to search box
+// Lock TypeAhead results position to search box [for Chrome]
 var lockTypeAheadPositionCss = document.createElement("style");
 lockTypeAheadPositionCss.type = "text/css";
 lockTypeAheadPositionCss.innerHTML = "#_panelMenu__kbtypeahead__popupKBSearch_PW-1 { top:50px !important; }";
@@ -231,11 +231,11 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 // Overview page changes
     
     // Verbals count
-    if (document.getElementById("main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0")) {
+    if (document.getElementById("main__overviewMetrics__dockZoneBottomRight_ctl03_ctl00_rpPanel_HTC__title_0")) {
         var verbalString = "gvVerbals_DXDataRow";
         var findSource = document.getElementsByTagName('html')[0].innerHTML;
         var numVerbals = findSource.split(verbalString).length-1;
-        document.querySelector("#main__overviewMetrics__dockZoneBottomRight_ctl03_rpPanel_HTC__title_0").innerText = "MY VERBALS | "+numVerbals+" outstanding";
+        document.querySelector("#main__overviewMetrics__dockZoneBottomRight_ctl03_ctl00_rpPanel_HTC__title_0").innerText = "MY VERBALS | "+numVerbals+" outstanding";
     };
 
 } else if(document.URL.indexOf("AddEditMember.aspx") >= 0) {
