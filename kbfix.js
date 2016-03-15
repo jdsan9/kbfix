@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.0.0
+// @version      2.1.0
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -14,8 +14,8 @@
 // ==/UserScript==
 
 
-var kbfixver = "2.0.0";
-// Release notes: Complete visual overhaul
+var kbfixver = "2.1.0";
+// Release notes: Expert profile visual tweaks
 
 
 // Global changes
@@ -272,8 +272,27 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDeetSA.type = "text/css";
     projectDeetSA.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2) { position: absolute; top: 230px; font-size: 12px; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2):after { content: ' Secondary Associate(s)'; font-size: 8px; font-weight: normal; text-transform: uppercase; }";
     document.body.appendChild(projectDeetSA);
+    var getSAInfo = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblResearchers_0');
+    if (getSAInfo.innerHTML === "None") {
+        var hideSAInfo = document.createElement("style");
+        hideSAInfo.type = "text/css";
+        hideSAInfo.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) { display: none !important; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 198px 10px 5px 5px !important; }";
+        document.body.appendChild(hideSAInfo);
+    };
     
     // Client Company Type
+    var clientTypeRaw = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblCompanyType_0');
+    if (clientTypeRaw.innerHTML === "HedgeFund") {
+        clientTypeRaw.innerHTML = "Hedge Fund";
+    } else if (clientTypeRaw.innerHTML === "PrivateEquity") {
+        clientTypeRaw.innerHTML = "Private Equity";
+    } else if (clientTypeRaw.innerHTML === "MutualFund") {
+        clientTypeRaw.innerHTML = "Mutual Fund";
+    } else if (clientTypeRaw.innerHTML === "ConsultingFirm") {
+        clientTypeRaw.innerHTML = "Consulting Firm";
+    } else {
+        clientTypeRaw = clientTypeRaw;
+    };
     var projectDeetClTypeLabel = document.createElement("style");
     projectDeetClTypeLabel.type = "text/css";
     projectDeetClTypeLabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(1) { display: none !important; }";
@@ -437,6 +456,51 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     expEmpHxFix.type = "text/css";
     expEmpHxFix.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstEmployment_0_D { height: inherit !important; } #main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstEmployment_0_D table tbody tr td { font-size: 11px !important; }";
     document.body.appendChild(expEmpHxFix);
+    
+    // Pin tool bar to top
+    var floatingExpertToolsCss = document.createElement("style");
+    floatingExpertToolsCss.type = "text/css";
+    floatingExpertToolsCss.innerHTML = "#main_divEditLinks { position:fixed;top:55px;left:0px;width:100%;height:20px;display:block;border-bottom:#BAC9D8 1px solid;box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:999; } #_panelMenu { border-bottom: none !important; box-shadow: none !important; } #main_divEditLinks a { text-decoration: none; }";
+    document.body.appendChild(floatingExpertToolsCss);
+    var topSpacerHeight = document.querySelector('.masterContent');
+    topSpacerHeight.style.position = "relative";
+    topSpacerHeight.style.top = "16px";
+    
+    // Pin tab menu to top bar when scrolled past via jQuery
+    var pinnedTabMenuCss = document.createElement("style");
+    pinnedTabMenuCss.type = "text/css";
+    pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 63px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:999;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px #BAC9D8; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
+    document.body.appendChild(pinnedTabMenuCss);
+    var $window = $(window),
+        $stickyEl = $('#main_main_tbcAll_ulTabContainer'),
+        elTop = $stickyEl.offset().top;
+    $window.scroll(function() {
+        $stickyEl.toggleClass('pinned', $window.scrollTop() > elTop - 60);
+    });
+    
+    // Hide old expert name w/ collapse button & center newly styled expert name
+    var expertNameValue = document.querySelector('.dxnb-ghtext:nth-child(1)').innerHTML;
+    var expertDeetNameBar = document.createElement("style");
+    expertDeetNameBar.type = "text/css";
+    expertDeetNameBar.innerHTML = "#main__navAdvisorProfile_GHE0 { display: none; }";
+    document.body.appendChild(expertDeetNameBar);
+    var expertDeetNewName = document.createElement("div");
+    var expertNameActual = expertNameValue;
+    expertIdActual = expertNameActual.substring(expertNameActual.indexOf("("));
+    expertNameActual = expertNameActual.substring(0, expertNameActual.indexOf("("));
+    expertDeetNewName.innerHTML = expertNameActual + '<div id="expertIdActualDiv" style="font-size: 18px !important;">' + expertIdActual + '</div>';
+    expertDeetNewName.id = "expertDeetNewNameDiv";
+    document.body.appendChild(expertDeetNewName);
+    var expertDeetNewNameCss = document.createElement("style");
+    expertDeetNewNameCss.type = "text/css";
+    expertDeetNewNameCss.innerHTML = "#expertDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #expertDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; } #main__navAdvisorProfile_GC0.dxnbGroupContent_Office2010Blue { padding: 0px !important; } .masterContent { background: #F7F7F7; } #main__navAdvisorProfile { padding-top: 30px; }";
+    document.body.appendChild(expertDeetNewNameCss);
+    
+    // Expand and restyle expert bio
+    var expInfoBox = document.createElement("style");
+    expInfoBox.type = "text/css";
+    expInfoBox.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(3) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
+    document.body.appendChild(expInfoBox);
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
