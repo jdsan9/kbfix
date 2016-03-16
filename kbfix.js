@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.1.0
+// @version      2.1.1
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -14,12 +14,18 @@
 // ==/UserScript==
 
 
-var kbfixver = "2.1.0";
-// Release notes: Expert profile visual tweaks
+// Global Variables
+
+// Current version
+var kbfixver = "2.1.1";
+// Release notes: Minor tweaks & bug fixes on project & profile
+
+// Browser detection
+var isFirefox = typeof InstallTrigger !== 'undefined';
+var isChrome = !!window.chrome && !!window.chrome.webstore;
 
 
 // Global changes
-
 
 // New KB logo
 document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/6LFyPDi.png";
@@ -73,7 +79,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Floating project toolbar
     var floatingToolbarCss = document.createElement("style");
     floatingToolbarCss.type = "text/css";
-    floatingToolbarCss.innerHTML = ".kb-main-content > table > tbody > tr:nth-of-type(1) { position:fixed;top:55px;left:0px;width:100%;display:block;border-bottom:#BAC9D8 1px solid;box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:999; } #_panelMenu { border-bottom: none !important; box-shadow: none !important; }";
+    floatingToolbarCss.innerHTML = ".kb-main-content > table > tbody > tr:nth-of-type(1) { position:fixed;top:55px;left:0px;width:100%;display:block;border-bottom:#BAC9D8 1px solid;box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:999; } .kb-main-content > table > tbody > tr:nth-of-type(1) > td > a { text-decoration: none !important; } #_panelMenu { border-bottom: none !important; box-shadow: none !important; }";
     document.body.appendChild(floatingToolbarCss);
     var topSpacerHeight = document.querySelector('.masterContent');
     topSpacerHeight.style.position = "relative";
@@ -143,6 +149,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     
     // Vetting Q&A for all
     $('#main_tbcAlltab10').removeClass("invisible");
+    
     
     // Highlight important project details
     
@@ -215,7 +222,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDeetNewNameCss.type = "text/css";
     projectDeetNewNameCss.innerHTML = "#projectDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #projectDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; }";
     document.body.appendChild(projectDeetNewNameCss);
-    document.getElementById("projectIdActualDiv").innerHTML = document.getElementById("projectIdActualDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 18px !important; display: inline; color: red;">(Anonymous)</div>')
+    document.getElementById("projectIdActualDiv").innerHTML = document.getElementById("projectIdActualDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 18px !important; display: inline; color: red;">(Anonymous)</div>');
     
     // Tweak Project Information window location & visuals
     var projectDeetInfoPane = document.createElement("style");
@@ -301,9 +308,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDeetClType.type = "text/css";
     projectDeetClType.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
     document.body.appendChild(projectDeetClType);
-
     
-    // Tab-specific changes
+    // Project page tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
     var allTablesProjPageIndex = allTablesProjPage.length;
     document.getElementsByTagName("table")[allTablesProjPageIndex - 1].style.display = "none";
@@ -327,23 +333,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var numRecruits = "main_main_tbcAllProject_Leads_rptLeads_trNote";
         var recruitCountDisplayed = findInSource.split(numRecruits).length-1;
         recruitCountLoc.textContent = recruitCount+" | "+recruitCountDisplayed+" Displayed";
-        
-        // Hyperlink Project ID
-        //document.body.innerHTML = document.body.innerHTML.replace(') Note :', '">View Project</a> - Note:');
-        //document.body.innerHTML = document.body.innerHTML.replaceAll('(ID:', "<a href='https://www.crgstaff.com/Projects/ProjectDetail_Tabbed.aspx?ID=");
-        //document.body.innerHTML = document.body.innerHTML.replaceAll(' | <b>', '</a> | <b>');
-        //document.body.innerHTML = document.body.innerHTML.replaceAll('&lt;br&gt;&lt;', '<br><');
-        //document.body.innerHTML = document.body.innerHTML.replaceAll('&gt;', '>');
-        
-        // Rank drop down
-        //var leadTableDig1 = leadTable.firstChild;
-        //leadTableDig1.id = "leadContainer";
-        //var leadTableDig2 = leadTableDig1.firstChild;
-        //var leadTableMotherlode = leadTableDig2;
-        //$("#leadContainer tr").each(function(idx, elem) {
-        //    $(elem).addClass("tile" + (idx % 3 + 1));
-        //});
-        
         
     } else if (document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain")) {
         // Expert search 
@@ -426,6 +415,24 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.title = expertProfilePageTitle.replace("Expert Profile - ", "");
     document.title = document.title + " - Knowledge Broker";
     
+    // Hide old expert name w/ collapse button & center newly styled expert name
+    var expertNameValue = document.querySelector('.dxnb-ghtext:nth-child(1)').innerHTML;
+    var expertDeetNameBar = document.createElement("style");
+    expertDeetNameBar.type = "text/css";
+    expertDeetNameBar.innerHTML = "#main__navAdvisorProfile_GHE0 { display: none; }";
+    document.body.appendChild(expertDeetNameBar);
+    var expertDeetNewName = document.createElement("div");
+    var expertNameActual = expertNameValue;
+    expertIdActual = expertNameActual.substring(expertNameActual.indexOf("("));
+    expertNameActual = expertNameActual.substring(0, expertNameActual.indexOf("("));
+    expertDeetNewName.innerHTML = expertNameActual + '<div id="expertIdActualDiv" style="font-size: 18px !important;">' + expertIdActual + '</div>';
+    expertDeetNewName.id = "expertDeetNewNameDiv";
+    document.body.appendChild(expertDeetNewName);
+    var expertDeetNewNameCss = document.createElement("style");
+    expertDeetNewNameCss.type = "text/css";
+    expertDeetNewNameCss.innerHTML = "#expertDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #expertDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; } #main__navAdvisorProfile_GC0.dxnbGroupContent_Office2010Blue { padding: 0px !important; } .masterContent { background: #F7F7F7; } #main__navAdvisorProfile { padding-top: 30px; }";
+    document.body.appendChild(expertDeetNewNameCss);
+    
     // EXPERT or PROSPECT tag on top right
     var expertTagOrProspectTag = document.querySelector('#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lblPresentableLabelValue_0');
     expertTagOrProspectTag = expertTagOrProspectTag.innerHTML;
@@ -439,6 +446,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         floatingExpertTagCss.type = "text/css";
         floatingExpertTagCss.innerHTML = "#floatingExpertTagDiv { position:fixed;top:-10px;right:10px;display:block;z-index:9999;font-size:60px !important;opacity:.1;text-transform:uppercase;font-weight:bold; }";
         document.body.appendChild(floatingExpertTagCss);
+        document.getElementById("expertIdActualDiv").innerHTML = document.getElementById("expertIdActualDiv").innerHTML.replace('(Expert ID:', '(Prospect ID:')
     } else {
         // Show Expert
         var floatingExpertTag = document.createElement("div");
@@ -478,29 +486,18 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         $stickyEl.toggleClass('pinned', $window.scrollTop() > elTop - 60);
     });
     
-    // Hide old expert name w/ collapse button & center newly styled expert name
-    var expertNameValue = document.querySelector('.dxnb-ghtext:nth-child(1)').innerHTML;
-    var expertDeetNameBar = document.createElement("style");
-    expertDeetNameBar.type = "text/css";
-    expertDeetNameBar.innerHTML = "#main__navAdvisorProfile_GHE0 { display: none; }";
-    document.body.appendChild(expertDeetNameBar);
-    var expertDeetNewName = document.createElement("div");
-    var expertNameActual = expertNameValue;
-    expertIdActual = expertNameActual.substring(expertNameActual.indexOf("("));
-    expertNameActual = expertNameActual.substring(0, expertNameActual.indexOf("("));
-    expertDeetNewName.innerHTML = expertNameActual + '<div id="expertIdActualDiv" style="font-size: 18px !important;">' + expertIdActual + '</div>';
-    expertDeetNewName.id = "expertDeetNewNameDiv";
-    document.body.appendChild(expertDeetNewName);
-    var expertDeetNewNameCss = document.createElement("style");
-    expertDeetNewNameCss.type = "text/css";
-    expertDeetNewNameCss.innerHTML = "#expertDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #expertDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; } #main__navAdvisorProfile_GC0.dxnbGroupContent_Office2010Blue { padding: 0px !important; } .masterContent { background: #F7F7F7; } #main__navAdvisorProfile { padding-top: 30px; }";
-    document.body.appendChild(expertDeetNewNameCss);
-    
-    // Expand and restyle expert bio
-    var expInfoBox = document.createElement("style");
-    expInfoBox.type = "text/css";
-    expInfoBox.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(3) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
-    document.body.appendChild(expInfoBox);
+    // Expand and restyle expert bio after determining FF v Chrome
+    if ( isFirefox === true ) {
+        var expInfoBox = document.createElement("style");
+        expInfoBox.type = "text/css";
+        expInfoBox.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(2) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
+        document.body.appendChild(expInfoBox);
+    } else {
+        var expInfoBox = document.createElement("style");
+        expInfoBox.type = "text/css";
+        expInfoBox.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(3) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
+        document.body.appendChild(expInfoBox);
+    };
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
@@ -564,27 +561,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     expEmpHxFix.type = "text/css";
     expEmpHxFix.innerHTML = "#main_addProspectControl__roundPanel__employmentHistory__lstEmployment_D.dxlbd { height: inherit !important; } #main_addProspectControl__roundPanel__employmentHistory__lstEmployment_D.dxlbd table tbody tr td { font-size: 11px !important; }";
     document.body.appendChild(expEmpHxFix);
-    
-    /* Holding during debug: finding event trigger
-    // Set default country - UNITED STATES
-    var setDefaultCountry = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_I");
-    setDefaultCountry.value = "UNITED STATES";
-    var setDefaultCountryID = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_VI");
-    setDefaultCountryID.value = "US";
-    
-    // Set default angle - Industry Expert
-    var setDefaultAngle = document.getElementById("main_addProspectControl__roundPanel__ddlAngles_I");
-    setDefaultAngle.value = "Industry Expert";
-    var setDefaultAngleID = document.getElementById("main_addProspectControl__roundPanel__ddlAngles_VI");
-    setDefaultAngleID.value = "8";
-    
-    // Set default source - Recruiter Corporate
-    var setDefaultSource = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_I");
-    setDefaultSource.value = "Recruiter Corporate";
-    var setDefaultSourceID = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_VI");
-    setDefaultSourceID.value = "151";
-    document.querySelector('#main_addProspectControl__roundPanel__ddlResearchSource_I').dispatchEvent(new Event("aspxETextChanged('main_addProspectControl__roundPanel__ddlResearchSource')"))
-    */
     
 };
 
