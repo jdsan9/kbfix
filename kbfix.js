@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.1.1
+// @version      2.1.2
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,12 +17,16 @@
 // Global Variables
 
 // Current version
-var kbfixver = "2.1.1";
-// Release notes: Minor tweaks & bug fixes on project & profile
+var knowledgeBetterVer = "2.1.2";
+// Release notes: Cleaning up tweaks on project, profile, vetting pages
 
 // Browser detection
 var isFirefox = typeof InstallTrigger !== 'undefined';
 var isChrome = !!window.chrome && !!window.chrome.webstore;
+
+// KnowledgeBetter CSS container
+$( "body" ).append( '<style type="text/css" id="knowledgeBetterCSS"></style>' );
+var knowledgeBetterCSS = document.getElementById('#knowledgeBetterCSS');
 
 
 // Global changes
@@ -31,30 +35,24 @@ var isChrome = !!window.chrome && !!window.chrome.webstore;
 document.getElementById("_panelMenu__imgLogo").src = "https://i.imgur.com/6LFyPDi.png";
 
 // Current version as logo title
-document.getElementById("_panelMenu__imgLogo").title = "KnowledgeBetter v" + kbfixver;
+document.getElementById("_panelMenu__imgLogo").title = "KnowledgeBetter v" + knowledgeBetterVer;
 
 // Remove "KB Search" radio button from TypeAhead
-var kbSearchRadioCss = document.createElement("style");
-kbSearchRadioCss.type = "text/css";
-kbSearchRadioCss.innerHTML = "#_panelMenu__kbtypeahead__popupKBSearch_CSD-1 > table:nth-of-type(1) { display:none !important; }";
-document.body.appendChild(kbSearchRadioCss);
+var kbSearchRadioCss = "#_panelMenu__kbtypeahead__popupKBSearch_CSD-1 > table:nth-of-type(1) { display:none !important; }";
+$( '#knowledgeBetterCSS' ).append( kbSearchRadioCss );
 
 // Make "Loading..." text a bit more interesting
 var loadingLabel = document.querySelector('#_panelMenu__kbtypeahead__loadingKB_TL');
 loadingLabel.textContent = "Combobulating Results Matrix...";
 
 // Lock TypeAhead results position to search box [for Chrome]
-var lockTypeAheadPositionCss = document.createElement("style");
-lockTypeAheadPositionCss.type = "text/css";
-lockTypeAheadPositionCss.innerHTML = "#_panelMenu__kbtypeahead__popupKBSearch_PW-1 { top:54px !important; }";
-document.body.appendChild(lockTypeAheadPositionCss);
+var lockTypeAheadPositionCss = "#_panelMenu__kbtypeahead__popupKBSearch_PW-1 { top:54px !important; }";
+$( '#knowledgeBetterCSS' ).append( lockTypeAheadPositionCss );
 
 // Restyle sticky header bar
 $('#_panelMenu').removeClass("dxrpControl_Office2010Blue");
-var stickyBarRestyleCss = document.createElement("style");
-stickyBarRestyleCss.type = "text/css";
-stickyBarRestyleCss.innerHTML = "#_panelMenu { background: linear-gradient(#B6CDE5, #F7F7F7) !important; border-bottom: #BAC9D8 1px solid; box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31); height: 55px; }";
-document.body.appendChild(stickyBarRestyleCss);
+var stickyBarRestyleCss = "#_panelMenu { background: linear-gradient(#B6CDE5, #F7F7F7) !important; border-bottom: #BAC9D8 1px solid; box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31); height: 55px; }";
+$( '#knowledgeBetterCSS' ).append( stickyBarRestyleCss );
 var tlCorner = document.querySelector('.dxWeb_rpTopLeftCorner_Office2010Blue');
 tlCorner.style.display = "none";
 var trCorner = document.querySelector('.dxWeb_rpTopRightCorner_Office2010Blue');
@@ -66,10 +64,8 @@ brCorner.style.display = "none";
 
 // Make the font part of the 21st century
 $('head').append('<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">');
-var fontEntirePage = document.createElement("style");
-fontEntirePage.type = "text/css";
-fontEntirePage.innerHTML = "body { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } span { font-family: 'Open Sans', sans-serif !important; } .masterContent td { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .tabmenu span { font-size: 12px; } .fieldLabel { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .dxeBase_Office2010Blue { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .dxeListBoxItem_Office2010Blue { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; }";
-document.body.appendChild(fontEntirePage);
+var fontEntirePage = "body { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } span { font-family: 'Open Sans', sans-serif !important; } .masterContent td { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .tabmenu span { font-size: 12px; } .fieldLabel { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .dxeBase_Office2010Blue { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .dxeListBoxItem_Office2010Blue { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; }";
+$( '#knowledgeBetterCSS' ).append( fontEntirePage );
 
 
 // Page-specific changes
@@ -77,15 +73,13 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 // Project page changes
     
     // Floating project toolbar
-    var floatingToolbarCss = document.createElement("style");
-    floatingToolbarCss.type = "text/css";
-    floatingToolbarCss.innerHTML = ".kb-main-content > table > tbody > tr:nth-of-type(1) { position:fixed;top:55px;left:0px;width:100%;display:block;border-bottom:#BAC9D8 1px solid;box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:999; } .kb-main-content > table > tbody > tr:nth-of-type(1) > td > a { text-decoration: none !important; } #_panelMenu { border-bottom: none !important; box-shadow: none !important; }";
-    document.body.appendChild(floatingToolbarCss);
+    var floatingToolbarCss = ".kb-main-content > table > tbody > tr:nth-of-type(1) { position:fixed;top:55px;left:0px;width:100%;display:block;border-bottom:#BAC9D8 1px solid;box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:999; } .kb-main-content > table > tbody > tr:nth-of-type(1) > td > a { text-decoration: none !important; } #_panelMenu { border-bottom: none !important; box-shadow: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( floatingToolbarCss );
     var topSpacerHeight = document.querySelector('.masterContent');
     topSpacerHeight.style.position = "relative";
     topSpacerHeight.style.top = "16px";
     var projectDetailTitle = document.querySelector(".pageTitle");
-    projectDetailTitle.textContent = "Project Tools";
+    projectDetailTitle.textContent = "";
 
     // Extend project info box
     function findFirstDescendantById(parent, tagname) {
@@ -98,7 +92,14 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var infoBox = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "div");
     infoBox.style.height = "560px";
     infoBox.style.border = "solid 3px #E6E6E6";
+    infoBox.style.maxWidth = "900px";
     infoBox.style.background = "white";
+    
+    // Tweak Project Information window location & visuals
+    var projectDeetInfoPane = "#main_projectView__navProjectView_GCA0 { margin-top: 30px; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetInfoPane );
+    var projectDeetInfoPaneWrap = "#main_projectView__navProjectView_GC0 { background-color: #F7F7F7; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetInfoPaneWrap );
     
     // Project status tag on top right
     var projStatusOnPage = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblStatus_0');
@@ -107,10 +108,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     floatingProjectTag.innerHTML = projStatusOnPage;
     floatingProjectTag.id = "floatingProjectTagDiv";
     document.body.appendChild(floatingProjectTag);
-    var floatingProjectTagCss = document.createElement("style");
-    floatingProjectTagCss.type = "text/css";
-    floatingProjectTagCss.innerHTML = "#floatingProjectTagDiv { position:fixed;top:-10px;right:10px;display:block;z-index:1000;font-size:60px !important;opacity:.1;text-transform:uppercase;font-weight:bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(5) { display: none !important; }";
-    document.body.appendChild(floatingProjectTagCss);
+    var floatingProjectTagCss = "#floatingProjectTagDiv { position:fixed;top:-10px;right:10px;display:block;z-index:1000;font-size:60px !important;opacity:.1;text-transform:uppercase;font-weight:bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(5) { display: none !important; }";
+   $( '#knowledgeBetterCSS' ).append( floatingProjectTagCss );
 
     // Float project title on top right
     var projectNameValue = document.querySelector('.dxnb-ghtext:nth-child(1)').innerHTML;
@@ -118,17 +117,13 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     floatingProjectName.innerHTML = projectNameValue;
     floatingProjectName.id = "floatingProjectNameDiv";
     document.body.appendChild(floatingProjectName);
-    var floatingProjectNameCss = document.createElement("style");
-    floatingProjectNameCss.type = "text/css";
-    floatingProjectNameCss.innerHTML = "#floatingProjectNameDiv { position:fixed;top:56px;right:10px;display:block;z-index:999; }";
-    document.body.appendChild(floatingProjectNameCss);
+    var floatingProjectNameCss = "#floatingProjectNameDiv { position:fixed;top:56px;right:10px;display:block;z-index:999; }";
+    $( '#knowledgeBetterCSS' ).append( floatingProjectNameCss );
     document.getElementById("floatingProjectNameDiv").innerHTML = document.getElementById("floatingProjectNameDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 12px !important; display: inline; color: red;">(Anonymous)</div>')
     
     // Pin tab menu to top bar when scrolled past via jQuery
-    var pinnedTabMenuCss = document.createElement("style");
-    pinnedTabMenuCss.type = "text/css";
-    pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 63px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:999;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px #BAC9D8; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
-    document.body.appendChild(pinnedTabMenuCss);
+    var pinnedTabMenuCss = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 63px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:999;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px #BAC9D8; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
+    $( '#knowledgeBetterCSS' ).append( pinnedTabMenuCss );
     var $window = $(window),
         $stickyEl = $('#main_main_tbcAll_ulTabContainer'),
         elTop = $stickyEl.offset().top;
@@ -142,13 +137,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.title = document.title + " - Knowledge Broker";
     
     // Prevent leftward reclusion of project description box
-    var stopHidingOnLeft = document.createElement("style");
-    stopHidingOnLeft.type = "text/css";
-    stopHidingOnLeft.innerHTML = "div { text-indent: inherit !important; }";
-    document.body.appendChild(stopHidingOnLeft);
-    
-    // Vetting Q&A for all
-    $('#main_tbcAlltab10').removeClass("invisible");
+    var stopHidingOnLeft = "div { text-indent: inherit !important; }";
+    $( '#knowledgeBetterCSS' ).append( stopHidingOnLeft );
     
     
     // Highlight important project details
@@ -158,27 +148,19 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDeetClientCom.style.fontSize = "20px";
     projectDeetClientCom.style.fontWeight = "bold";
     projectDeetClientCom.style.textDecoration = "none";
-    var projectDeetClientComLabel = document.createElement("style");
-    projectDeetClientComLabel.type = "text/css";
-    projectDeetClientComLabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(1) { display: none !important; }";
-    document.body.appendChild(projectDeetClientComLabel);
-    var projectDeetClientComPos = document.createElement("style");
-    projectDeetClientComPos.type = "text/css";
-    projectDeetClientComPos.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) { position: absolute; top: 72px; }";
-    document.body.appendChild(projectDeetClientComPos);
+    var projectDeetClientComLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientComLabel );
+    var projectDeetClientComPos = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) { position: absolute; top: 72px; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientComPos );
     
     // Client Analyst
     var projectDeetClientAnalyst = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkContact_0');
     projectDeetClientAnalyst.style.fontSize = "15px";
     projectDeetClientAnalyst.style.textDecoration = "none";
-    var projectDeetClientAnalystLabel = document.createElement("style");
-    projectDeetClientAnalystLabel.type = "text/css";
-    projectDeetClientAnalystLabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(2) > td:nth-of-type(1) { display: none !important; }";
-    document.body.appendChild(projectDeetClientAnalystLabel);
-    var projectDeetClientAnalystPos = document.createElement("style");
-    projectDeetClientAnalystPos.type = "text/css";
-    projectDeetClientAnalystPos.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) { position: absolute; top: 102px; }";
-    document.body.appendChild(projectDeetClientAnalystPos);
+    var projectDeetClientAnalystLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(2) > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystLabel );
+    var projectDeetClientAnalystPos = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) { position: absolute; top: 102px; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystPos );
     
     // Target Companies
     var projectDeetTargets = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblTargetCompanies_0');
@@ -186,15 +168,10 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDeetTargets.style.fontWeight = "bold";
     
     // Project details list & container
-    var projectDeetTable = document.createElement("style");
-    projectDeetTable.type = "text/css";
-    projectDeetTable.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 218px 10px 5px 5px !important; }";
-    document.body.appendChild(projectDeetTable);
+    var projectDeetTable = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 218px 10px 5px 5px !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetTable );
     
     // 'View Client Rules' button
-    var projectDeetClientRule = document.createElement("style");
-    projectDeetClientRule.type = "text/css";
-    projectDeetClientRule.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClientRule_0 { text-decoration: none; text-transform: uppercase; font-size: 10px; cursor: pointer; z-index: 10; }";
     jQuery(document).ready(function() {
         var $ca = jQuery('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkContact_0'),
         $vcr = $('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClientRule_0').insertAfter($ca);
@@ -204,13 +181,12 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
             left : '2px'
         });
     });
-    document.body.appendChild(projectDeetClientRule);
+    var projectDeetClientRule = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClientRule_0 { text-decoration: none; text-transform: uppercase; font-size: 10px; cursor: pointer; z-index: 10; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientRule );   
     
     // Hide old project name w/ collapse button & center newly styled project name
-    var projectDeetNameBar = document.createElement("style");
-    projectDeetNameBar.type = "text/css";
-    projectDeetNameBar.innerHTML = "#main_projectView__navProjectView_GHE0 { display: none; }";
-    document.body.appendChild(projectDeetNameBar);
+    var projectDeetNameBar = "#main_projectView__navProjectView_GHE0 { display: none; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetNameBar );
     var projectDeetNewName = document.createElement("div");
     var projectNameActual = projectNameValue;
     projectIdActual = projectNameActual.substring(projectNameActual.indexOf("("));
@@ -218,73 +194,41 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDeetNewName.innerHTML = projectNameActual + '<div id="projectIdActualDiv" style="font-size: 18px !important;">' + projectIdActual + '</div>';
     projectDeetNewName.id = "projectDeetNewNameDiv";
     document.body.appendChild(projectDeetNewName);
-    var projectDeetNewNameCss = document.createElement("style");
-    projectDeetNewNameCss.type = "text/css";
-    projectDeetNewNameCss.innerHTML = "#projectDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #projectDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; }";
-    document.body.appendChild(projectDeetNewNameCss);
+    var projectDeetNewNameCss = "#projectDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #projectDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetNewNameCss );
     document.getElementById("projectIdActualDiv").innerHTML = document.getElementById("projectIdActualDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 18px !important; display: inline; color: red;">(Anonymous)</div>');
     
-    // Tweak Project Information window location & visuals
-    var projectDeetInfoPane = document.createElement("style");
-    projectDeetInfoPane.type = "text/css";
-    projectDeetInfoPane.innerHTML = "#main_projectView__navProjectView_GCA0 { margin-top: 30px; }";
-    document.body.appendChild(projectDeetInfoPane);
-    var projectDeetInfoPaneWrap = document.createElement("style");
-    projectDeetInfoPaneWrap.type = "text/css";
-    projectDeetInfoPaneWrap.innerHTML = "#main_projectView__navProjectView_GC0 { background-color: #F7F7F7; }";
-    document.body.appendChild(projectDeetInfoPaneWrap);
-    
     // Set width of project detail table labels column
-    var projectDeetLabelCol = document.createElement("style");
-    projectDeetLabelCol.type = "text/css";
-    projectDeetLabelCol.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr > td:nth-of-type(1) { width: 140px !important; }";
-    document.body.appendChild(projectDeetLabelCol);
+    var projectDeetLabelCol = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr > td:nth-of-type(1) { width: 140px !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetLabelCol );
     
     // AM info
-    var projectDeetAMLabel = document.createElement("style");
-    projectDeetAMLabel.type = "text/css";
-    projectDeetAMLabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(1) { display: none !important; }";
-    document.body.appendChild(projectDeetAMLabel);
-    var projectDeetAM = document.createElement("style");
-    projectDeetAM.type = "text/css";
-    projectDeetAM.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(2) { position: absolute; top: 160px; font-size: 12px; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(2):after { content: ' Account Manager'; font-size: 8px; font-weight: normal; text-transform: uppercase; }";
-    document.body.appendChild(projectDeetAM);
+    var projectDeetAMLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetAMLabel );
+    var projectDeetAM = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(2) { position: absolute; top: 160px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(2):after { content: ' Account Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetAM );
     
     // PM info
-    var projectDeetPMLabel = document.createElement("style");
-    projectDeetPMLabel.type = "text/css";
-    projectDeetPMLabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(1) { display: none !important; }";
-    document.body.appendChild(projectDeetPMLabel);
-    var projectDeetPM = document.createElement("style");
-    projectDeetPM.type = "text/css";
-    projectDeetPM.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(2) { position: absolute; top: 180px; font-size: 12px; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(2):after { content: ' Project Manager'; font-size: 8px; font-weight: normal; text-transform: uppercase; }";
-    document.body.appendChild(projectDeetPM);
+    var projectDeetPMLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPMLabel );
+    var projectDeetPM = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(2) { position: absolute; top: 180px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(2):after { content: ' Project Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPM );
     
     // Primary Associate info
-    var projectDeetPALabel = document.createElement("style");
-    projectDeetPALabel.type = "text/css";
-    projectDeetPALabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(1) { display: none !important; }";
-    document.body.appendChild(projectDeetPALabel);
-    var projectDeetPA = document.createElement("style");
-    projectDeetPA.type = "text/css";
-    projectDeetPA.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(2) { position: absolute; top: 210px; font-size: 12px; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(2):after { content: ' Primary Associate'; font-size: 8px; font-weight: normal; text-transform: uppercase; }";
-    document.body.appendChild(projectDeetPA);
+    var projectDeetPALabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPALabel );
+    var projectDeetPA = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(2) { position: absolute; top: 210px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(2):after { content: ' Primary Associate'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPA );
     
     // Secondary Associate(s) info
-    var projectDeetSALabel = document.createElement("style");
-    projectDeetSALabel.type = "text/css";
-    projectDeetSALabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(1) { display: none !important; }";
-    document.body.appendChild(projectDeetSALabel);
-    var projectDeetSA = document.createElement("style");
-    projectDeetSA.type = "text/css";
-    projectDeetSA.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2) { position: absolute; top: 230px; font-size: 12px; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2):after { content: ' Secondary Associate(s)'; font-size: 8px; font-weight: normal; text-transform: uppercase; }";
-    document.body.appendChild(projectDeetSA);
+    var projectDeetSALabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetSALabel );
+    var projectDeetSA = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2) { position: absolute; top: 230px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2):after { content: ' Secondary Associate(s)'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetSA );
     var getSAInfo = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblResearchers_0');
     if (getSAInfo.innerHTML === "None") {
-        var hideSAInfo = document.createElement("style");
-        hideSAInfo.type = "text/css";
-        hideSAInfo.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) { display: none !important; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 198px 10px 5px 5px !important; }";
-        document.body.appendChild(hideSAInfo);
+        var hideSAInfo = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) { display: none !important; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 198px 10px 5px 5px !important; }";
+        $( '#knowledgeBetterCSS' ).append( hideSAInfo );
     };
     
     // Client Company Type
@@ -300,14 +244,15 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     } else {
         clientTypeRaw = clientTypeRaw;
     };
-    var projectDeetClTypeLabel = document.createElement("style");
-    projectDeetClTypeLabel.type = "text/css";
-    projectDeetClTypeLabel.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(1) { display: none !important; }";
-    document.body.appendChild(projectDeetClTypeLabel);
-    var projectDeetClType = document.createElement("style");
-    projectDeetClType.type = "text/css";
-    projectDeetClType.innerHTML = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
-    document.body.appendChild(projectDeetClType);
+    var projectDeetClTypeLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClTypeLabel );
+    var projectDeetClType = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClType );
+    
+    // Vetting Q&A tab
+    var vettingSurveyStyles = "div.questions.ng-scope.ng-isolate-scope { margin-top: 50px; } .questions { border: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( vettingSurveyStyles );
+    
     
     // Project page tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
@@ -351,7 +296,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
         
 	    // Float search toolbar when scrolled past
-        pinnedTabMenuCss.innerHTML = "table.pinned { position: fixed;top: 75px;left: 0px;z-index: 1005;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 96px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:1010;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
+        pinnedTabMenuCss2 = "table.pinned { position: fixed;top: 75px;left: 0px;z-index: 1005;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 96px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:1010;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
+        $( '#knowledgeBetterCSS' ).append( pinnedTabMenuCss2 );
         var tableExSearch = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "table");
         tableExSearch.id = "exSearchToolbar";
         var $window2 = $(window),
@@ -374,11 +320,10 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         // Vetting
         
         // Remove inner scrollbar
-        var vettingFrame = document.createElement("style");
-        vettingFrame.type = "text/css";
-        vettingFrame.innerHTML = "#main_main_tbcAllProject_Vetting_grdVetting > tbody > tr > td > div:nth-of-type(2) { height: inherit !important; }";
-        document.body.appendChild(vettingFrame);
-    };
+        var vettingFrame = "#main_main_tbcAllProject_Vetting_grdVetting > tbody > tr > td > div:nth-of-type(2) { height: inherit !important; }";
+        $( '#knowledgeBetterCSS' ).append( vettingFrame );
+        
+    };    
 
 } else if(document.URL.indexOf("CurrentProjects.aspx") >= 0) {
 // Current Projects page changes
@@ -389,10 +334,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Remove inner vertical scroll on projects list
     var currentProjectsFrame = document.getElementById("main_projectsBrowseView_ctl00_gvProjects_DXMainTable");
     currentProjectsFrame.style.height = "100%";
-    var currentProjectsCss = document.createElement("style");
-    currentProjectsCss.type = "text/css";
-    currentProjectsCss.innerHTML = "#main_projectsBrowseView_ctl00_trProjects > td > table > tbody > tr > td > div:nth-of-type(2) { height:inherit !important; }";
-    document.body.appendChild(currentProjectsCss);
+    var currentProjectsCss = "#main_projectsBrowseView_ctl00_trProjects > td > table > tbody > tr > td > div:nth-of-type(2) { height:inherit !important; }";
+    $( '#knowledgeBetterCSS' ).append( currentProjectsCss );
 
     // Projects count
     var findInCurrents = document.getElementById("main_projectsBrowseView_ctl00_gvProjects_DXMainTable").innerHTML;
@@ -402,10 +345,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     floatingProjectCount.innerHTML = "<font color='red'>Priority</font>: "+countPriority+" | <font color='orange'>Active</font>: "+countActive;
     floatingProjectCount.id = "floatingProjectCountDiv";
     document.body.appendChild(floatingProjectCount);
-    var floatingProjectCountCss = document.createElement("style");
-    floatingProjectCountCss.type = "text/css";
-    floatingProjectCountCss.innerHTML = "#floatingProjectCountDiv { position:fixed;top:20px;right:25px;display:block;z-index:10000;font-weight:bold; }";
-    document.body.appendChild(floatingProjectCountCss);
+    var floatingProjectCountCss = "#floatingProjectCountDiv { position:fixed;top:20px;right:25px;display:block;z-index:10000;font-weight:bold; }";
+    $( '#knowledgeBetterCSS' ).append( floatingProjectCountCss );
     
 } else if(document.URL.indexOf("MemberProfile_Tabbed.aspx") >= 0) {
 // Expert Profile page changes
@@ -417,10 +358,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     
     // Hide old expert name w/ collapse button & center newly styled expert name
     var expertNameValue = document.querySelector('.dxnb-ghtext:nth-child(1)').innerHTML;
-    var expertDeetNameBar = document.createElement("style");
-    expertDeetNameBar.type = "text/css";
-    expertDeetNameBar.innerHTML = "#main__navAdvisorProfile_GHE0 { display: none; }";
-    document.body.appendChild(expertDeetNameBar);
+    var expertDeetNameBar = "#main__navAdvisorProfile_GHE0 { display: none; }";
+    $( '#knowledgeBetterCSS' ).append( expertDeetNameBar );
     var expertDeetNewName = document.createElement("div");
     var expertNameActual = expertNameValue;
     expertIdActual = expertNameActual.substring(expertNameActual.indexOf("("));
@@ -428,10 +367,12 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     expertDeetNewName.innerHTML = expertNameActual + '<div id="expertIdActualDiv" style="font-size: 18px !important;">' + expertIdActual + '</div>';
     expertDeetNewName.id = "expertDeetNewNameDiv";
     document.body.appendChild(expertDeetNewName);
-    var expertDeetNewNameCss = document.createElement("style");
-    expertDeetNewNameCss.type = "text/css";
-    expertDeetNewNameCss.innerHTML = "#expertDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #expertDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; } #main__navAdvisorProfile_GC0.dxnbGroupContent_Office2010Blue { padding: 0px !important; } .masterContent { background: #F7F7F7; } #main__navAdvisorProfile { padding-top: 30px; }";
-    document.body.appendChild(expertDeetNewNameCss);
+    var expertDeetNewNameCss = "#expertDeetNewNameDiv { position:absolute; top:82px; width: 100%; text-align: center; } #expertDeetNewNameDiv span { font-size: 28px !important; text-transform: uppercase; } #main__navAdvisorProfile_GC0.dxnbGroupContent_Office2010Blue { padding: 0px !important; } .masterContent { background: #F7F7F7; } #main__navAdvisorProfile { padding-top: 30px; }";
+    $( '#knowledgeBetterCSS' ).append( expertDeetNewNameCss );
+    
+    // Adjust header for data review info
+    $("#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0_lblCurrentReviewer_0").appendTo("#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lnkEFMReviewRequired_0");
+    
     
     // EXPERT or PROSPECT tag on top right
     var expertTagOrProspectTag = document.querySelector('#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lblPresentableLabelValue_0');
@@ -442,10 +383,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         floatingExpertTag.innerHTML = "Prospect";
         floatingExpertTag.id = "floatingExpertTagDiv";
         document.body.appendChild(floatingExpertTag);
-        var floatingExpertTagCss = document.createElement("style");
-        floatingExpertTagCss.type = "text/css";
-        floatingExpertTagCss.innerHTML = "#floatingExpertTagDiv { position:fixed;top:-10px;right:10px;display:block;z-index:9999;font-size:60px !important;opacity:.1;text-transform:uppercase;font-weight:bold; }";
-        document.body.appendChild(floatingExpertTagCss);
+        var floatingExpertTagCss = "#floatingExpertTagDiv { position:fixed;top:-10px;right:10px;display:block;z-index:9999;font-size:60px !important;opacity:.1;text-transform:uppercase;font-weight:bold; }";
+        $( '#knowledgeBetterCSS' ).append( floatingExpertTagCss );
         document.getElementById("expertIdActualDiv").innerHTML = document.getElementById("expertIdActualDiv").innerHTML.replace('(Expert ID:', '(Prospect ID:')
     } else {
         // Show Expert
@@ -453,32 +392,26 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         floatingExpertTag.innerHTML = "Expert";
         floatingExpertTag.id = "floatingExpertTagDiv";
         document.body.appendChild(floatingExpertTag);
-        var floatingExpertTagCss = document.createElement("style");
-        floatingExpertTagCss.type = "text/css";
-        floatingExpertTagCss.innerHTML = "#floatingExpertTagDiv { position:fixed;top:-10px;right:10px;display:block;z-index:9999;font-size:60px !important;opacity:.1;text-transform:uppercase;font-weight:bold; }";
-        document.body.appendChild(floatingExpertTagCss);
+        var floatingExpertTagCss = "#floatingExpertTagDiv { position:fixed;top:-10px;right:10px;display:block;z-index:9999;font-size:60px !important;opacity:.1;text-transform:uppercase;font-weight:bold; }";
+        $( '#knowledgeBetterCSS' ).append( floatingExpertTagCss );
     };
     
-    // Employment history layout bugfix for new font
-    var expEmpHxFix = document.createElement("style");
-    expEmpHxFix.type = "text/css";
-    expEmpHxFix.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstEmployment_0_D { height: inherit !important; } #main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstEmployment_0_D table tbody tr td { font-size: 11px !important; }";
-    document.body.appendChild(expEmpHxFix);
+    // Employment history & TPA layout bug fix for new font
+    var expEmpHxFix = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstEmployment_0_D { height: inherit !important; } #main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstEmployment_0_D table tbody tr td { font-size: 11px !important; }";
+    $( '#knowledgeBetterCSS' ).append( expEmpHxFix );
+    var expTPAFix = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstThirdParty_0_D { height: inherit !important; } #main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lstThirdParty_0_D table tbody tr td { font-size: 11px !important; }";
+    $( '#knowledgeBetterCSS' ).append( expTPAFix );
     
     // Pin tool bar to top
-    var floatingExpertToolsCss = document.createElement("style");
-    floatingExpertToolsCss.type = "text/css";
-    floatingExpertToolsCss.innerHTML = "#main_divEditLinks { position:fixed;top:55px;left:0px;width:100%;height:20px;display:block;border-bottom:#BAC9D8 1px solid;box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:999; } #_panelMenu { border-bottom: none !important; box-shadow: none !important; } #main_divEditLinks a { text-decoration: none; }";
-    document.body.appendChild(floatingExpertToolsCss);
+    var floatingExpertToolsCss = "#main_divEditLinks { position:fixed;top:55px;left:0px;width:100%;height:20px;display:block;border-bottom:#BAC9D8 1px solid;box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.31);background-color:#F7F7F7;z-index:999; } #_panelMenu { border-bottom: none !important; box-shadow: none !important; } #main_divEditLinks a { text-decoration: none; }";
+    $( '#knowledgeBetterCSS' ).append( floatingExpertToolsCss );
     var topSpacerHeight = document.querySelector('.masterContent');
     topSpacerHeight.style.position = "relative";
     topSpacerHeight.style.top = "16px";
     
     // Pin tab menu to top bar when scrolled past via jQuery
-    var pinnedTabMenuCss = document.createElement("style");
-    pinnedTabMenuCss.type = "text/css";
-    pinnedTabMenuCss.innerHTML = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 63px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:999;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px #BAC9D8; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
-    document.body.appendChild(pinnedTabMenuCss);
+    var pinnedTabMenuCss3 = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 63px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:999;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px #BAC9D8; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
+    $( '#knowledgeBetterCSS' ).append( pinnedTabMenuCss3 );
     var $window = $(window),
         $stickyEl = $('#main_main_tbcAll_ulTabContainer'),
         elTop = $stickyEl.offset().top;
@@ -488,16 +421,18 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     
     // Expand and restyle expert bio after determining FF v Chrome
     if ( isFirefox === true ) {
-        var expInfoBox = document.createElement("style");
-        expInfoBox.type = "text/css";
-        expInfoBox.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(2) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
-        document.body.appendChild(expInfoBox);
+        var expInfoBox = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(2) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
+        $( '#knowledgeBetterCSS' ).append( expInfoBox );
     } else {
-        var expInfoBox = document.createElement("style");
-        expInfoBox.type = "text/css";
-        expInfoBox.innerHTML = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(3) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
-        document.body.appendChild(expInfoBox);
+        var expInfoBox = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(3) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
+        $( '#knowledgeBetterCSS' ).append( expInfoBox );
     };
+    
+    // Do Not Use button restyle & reconfigure
+    $("#main_lnkDoNotUseReactivate").appendTo("body");
+    document.querySelector('#main_lnkDoNotUseReactivate').innerHTML = "Do Not Use";
+    var doNotUseBtnCss = "#main_lnkDoNotUseReactivate { position: absolute; top: 88px; right: 8px; text-decoration: none; z-index: 980; opacity: 0.75; } #main_lnkDoNotUseReactivate:hover { opacity: 1; color: red; } #main_lnkDoNotUseReactivate:hover:before { content: 'Flag this profile as '; }";
+    $( '#knowledgeBetterCSS' ).append( doNotUseBtnCss );
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
@@ -521,10 +456,8 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Update Projects page
     
     // Remove project descriptions
-    var killUpdateDescription = document.createElement("style");
-    killUpdateDescription.type = "text/css";
-    killUpdateDescription.innerHTML = "#main_p > table > tbody > tr > td:nth-of-type(1) > table > tbody > tr:nth-of-type(4) { display:none !important; }";
-    document.body.appendChild(killUpdateDescription);
+    var killUpdateDescription = "#main_p > table > tbody > tr > td:nth-of-type(1) > table > tbody > tr:nth-of-type(4) { display:none !important; }";
+    $( '#knowledgeBetterCSS' ).append( killUpdateDescription );
     
     // Remove inner scroll
     var updateProjectsFrame = document.getElementById("main_p");
@@ -557,14 +490,33 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.title = "Add Prospect";
     
     // Employment history layout bugfix for new font
-    var expEmpHxFix = document.createElement("style");
-    expEmpHxFix.type = "text/css";
-    expEmpHxFix.innerHTML = "#main_addProspectControl__roundPanel__employmentHistory__lstEmployment_D.dxlbd { height: inherit !important; } #main_addProspectControl__roundPanel__employmentHistory__lstEmployment_D.dxlbd table tbody tr td { font-size: 11px !important; }";
-    document.body.appendChild(expEmpHxFix);
+    var expEmpHxFix = "#main_addProspectControl__roundPanel__employmentHistory__lstEmployment_D.dxlbd { height: inherit !important; } #main_addProspectControl__roundPanel__employmentHistory__lstEmployment_D.dxlbd table tbody tr td { font-size: 11px !important; }";
+    $( '#knowledgeBetterCSS' ).append( expEmpHxFix );
+    
+    /* Holding during debug: finding event trigger
+    // Set default country - UNITED STATES
+    var setDefaultCountry = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_I");
+    setDefaultCountry.value = "UNITED STATES";
+    var setDefaultCountryID = document.getElementById("main_addProspectControl__roundPanel__ddlCountry_VI");
+    setDefaultCountryID.value = "US";
+    
+    // Set default angle - Industry Expert
+    var setDefaultAngle = document.getElementById("main_addProspectControl__roundPanel__ddlAngles_I");
+    setDefaultAngle.value = "Industry Expert";
+    var setDefaultAngleID = document.getElementById("main_addProspectControl__roundPanel__ddlAngles_VI");
+    setDefaultAngleID.value = "8";
+    
+    // Set default source - Recruiter Corporate
+    var setDefaultSource = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_I");
+    setDefaultSource.value = "Recruiter Corporate";
+    var setDefaultSourceID = document.getElementById("main_addProspectControl__roundPanel__ddlResearchSource_VI");
+    setDefaultSourceID.value = "151";
+    document.querySelector('#main_addProspectControl__roundPanel__ddlResearchSource_I').dispatchEvent(new Event("aspxETextChanged('main_addProspectControl__roundPanel__ddlResearchSource')"))
+    */
     
 };
 
 
 
 // Source signature
-$("html").before("<!-- Injected with KnowledgeBetter v" + kbfixver + " -->");
+$("html").before("<!-- Injected with KnowledgeBetter v" + knowledgeBetterVer + " -->");
