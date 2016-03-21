@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.1.2
+// @version      2.2.0
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.1.2";
-// Release notes: Cleaning up tweaks on project, profile, vetting pages
+var knowledgeBetterVer = "2.2.0";
+// Release notes: Copy project name & ID with a click
 
 // Browser detection
 var isFirefox = typeof InstallTrigger !== 'undefined';
@@ -253,6 +253,26 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var vettingSurveyStyles = "div.questions.ng-scope.ng-isolate-scope { margin-top: 50px; } .questions { border: none !important; }";
     $( '#knowledgeBetterCSS' ).append( vettingSurveyStyles );
     
+    // Copyproject name
+    var projectNameAndId = document.querySelector('#projectDeetNewNameDiv');
+    projectNameAndId = projectNameAndId.textContent;
+    $( 'body' ).append( "<div id='textAreaCopyBtn' class='js-textareacopybtn'>Copy Project Name & ID to Clipboard</div>" );
+    $( 'body' ).append( "<textarea class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + projectNameAndId + "</textarea>" );
+    $( 'body' ).append( "<div id='copySuccessful'>Copied!</div>" );
+    var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 3px; right: 3px; cursor: pointer; height: 50px; width: 290px; z-index: 10000; text-align: center; padding-top: 20px; font-size: 14px; color: white; font-weight: bold; text-shadow: black 1px 1px 8px; opacity: 0; } #textAreaCopyBtn:hover { opacity: 1; }";
+    var copiedSuccessfulAnim = "@keyframes copiedSuccess { from { opacity: 1; } to { opacity: 0; } } .copyClicked { animation-name: copiedSuccess; animation-duration: 1s; animation-timing-function: ease-out; }"
+    var copySuccessfulStyles = "#copySuccessful { position: fixed; top: 9px; right: 302px; font-size: 30px; font-weight: bold; color: white; text-shadow: black 2px 2px 8px; z-index: 9999; opacity: 0; }";
+    $( '#knowledgeBetterCSS' ).append( copyInfoBtnStyles + copiedSuccessfulAnim + copySuccessfulStyles );
+    var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
+    copyTextareaBtn.addEventListener('click', function(event) {
+        var copyTextarea = document.querySelector('.js-copytextarea');
+        copyTextarea.select();
+        document.execCommand('copy');
+        $( '#copySuccessful' ).addClass('copyClicked');
+        setTimeout(function(){
+            $( '#copySuccessful' ).removeClass('copyClicked');
+        }, 1000);
+    });
     
     // Project page tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
