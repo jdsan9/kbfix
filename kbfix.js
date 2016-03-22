@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.2.0
+// @version      2.2.1
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.2.0";
-// Release notes: Copy project name & ID with a click
+var knowledgeBetterVer = "2.2.1";
+// Release notes: Cleaned up project name copy button and added frenchies
 
 // Browser detection
 var isFirefox = typeof InstallTrigger !== 'undefined';
@@ -117,7 +117,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     floatingProjectName.innerHTML = projectNameValue;
     floatingProjectName.id = "floatingProjectNameDiv";
     document.body.appendChild(floatingProjectName);
-    var floatingProjectNameCss = "#floatingProjectNameDiv { position:fixed;top:56px;right:10px;display:block;z-index:999; }";
+    var floatingProjectNameCss = "#floatingProjectNameDiv { position:fixed;top:56px;right:25px;display:block;z-index:999; }";
     $( '#knowledgeBetterCSS' ).append( floatingProjectNameCss );
     document.getElementById("floatingProjectNameDiv").innerHTML = document.getElementById("floatingProjectNameDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 12px !important; display: inline; color: red;">(Anonymous)</div>')
     
@@ -140,6 +140,16 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var stopHidingOnLeft = "div { text-indent: inherit !important; }";
     $( '#knowledgeBetterCSS' ).append( stopHidingOnLeft );
     
+    // Frenchie tax
+    $( 'body' ).append( '<div id="frenchiebtn" style="position: fixed; bottom: 5px; right: 5px; cursor: pointer;">[+]</div>' );
+    $( 'body' ).append( '<div id="frenchie" class="frenchieHide" style="position: fixed; bottom: 2px; right: 0px; height: 83px; width: 100px; transform: scaleX(-1); z-index: 10; background: url(\'http://static.wixstatic.com/media/e41b48_54ff68b1a20a4f32bd61e7e8744712a5.gif\'); background-size: contain;"></div>' );
+    var frenchieBtnMagic = ".frenchieHide { display:none };"
+    $( '#knowledgeBetterCSS' ).append( frenchieBtnMagic );
+    var frenchieBtn = document.querySelector('#frenchiebtn');
+    frenchieBtn.addEventListener('click', function(event) {
+        $( '#frenchiebtn' ).addClass('frenchieHide');
+        $( '#frenchie' ).removeClass('frenchieHide');
+    });
     
     // Highlight important project details
     
@@ -253,15 +263,15 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var vettingSurveyStyles = "div.questions.ng-scope.ng-isolate-scope { margin-top: 50px; } .questions { border: none !important; }";
     $( '#knowledgeBetterCSS' ).append( vettingSurveyStyles );
     
-    // Copyproject name
+    // Copy project name
     var projectNameAndId = document.querySelector('#projectDeetNewNameDiv');
     projectNameAndId = projectNameAndId.textContent;
-    $( 'body' ).append( "<div id='textAreaCopyBtn' class='js-textareacopybtn'>Copy Project Name & ID to Clipboard</div>" );
+    $( 'body' ).append( "<img src='http://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy project name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"http://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"http://i.imgur.com/HwRdEjY.png\"'></img>" );
     $( 'body' ).append( "<textarea class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + projectNameAndId + "</textarea>" );
     $( 'body' ).append( "<div id='copySuccessful'>Copied!</div>" );
-    var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 3px; right: 3px; cursor: pointer; height: 50px; width: 290px; z-index: 10000; text-align: center; padding-top: 20px; font-size: 14px; color: white; font-weight: bold; text-shadow: black 1px 1px 8px; opacity: 0; } #textAreaCopyBtn:hover { opacity: 1; }";
+    var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 53px; right: 0px; cursor: pointer; z-index: 10000; padding: 5px; }";
     var copiedSuccessfulAnim = "@keyframes copiedSuccess { from { opacity: 1; } to { opacity: 0; } } .copyClicked { animation-name: copiedSuccess; animation-duration: 1s; animation-timing-function: ease-out; }"
-    var copySuccessfulStyles = "#copySuccessful { position: fixed; top: 9px; right: 302px; font-size: 30px; font-weight: bold; color: white; text-shadow: black 2px 2px 8px; z-index: 9999; opacity: 0; }";
+    var copySuccessfulStyles = "#copySuccessful { position: fixed; top: 12px; right: 10px; font-size: 30px; font-weight: bold; color: white; text-shadow: black 2px 2px 8px; z-index: 9999; opacity: 0; }";
     $( '#knowledgeBetterCSS' ).append( copyInfoBtnStyles + copiedSuccessfulAnim + copySuccessfulStyles );
     var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
     copyTextareaBtn.addEventListener('click', function(event) {
@@ -273,7 +283,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
             $( '#copySuccessful' ).removeClass('copyClicked');
         }, 1000);
     });
-    
+        
     // Project page tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
     var allTablesProjPageIndex = allTablesProjPage.length;
@@ -316,7 +326,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         document.querySelector(".dxpPageNumber_Office2010Blue").onclick = addEventListener("mousemove", expertSearchPageChange);
         
 	    // Float search toolbar when scrolled past
-        pinnedTabMenuCss2 = "table.pinned { position: fixed;top: 75px;left: 0px;z-index: 1005;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 96px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:1010;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
+        pinnedTabMenuCss2 = "table.pinned { position: fixed;top: 75px;left: 0px;z-index: 1011;width: 100%;background-color: #F7F7F7; } #main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 96px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:1010;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px black; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
         $( '#knowledgeBetterCSS' ).append( pinnedTabMenuCss2 );
         var tableExSearch = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "table");
         tableExSearch.id = "exSearchToolbar";
@@ -343,6 +353,10 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var vettingFrame = "#main_main_tbcAllProject_Vetting_grdVetting > tbody > tr > td > div:nth-of-type(2) { height: inherit !important; }";
         $( '#knowledgeBetterCSS' ).append( vettingFrame );
         
+    } else if (document.getElementById("main_main_tbcAll_Placeholder_Project_Surveys")) {
+        // Vetting Q&A
+        var vettingQAFrame = ".project-details-survey-grid .survey-results-container { max-height: inherit; } .project-details-survey-grid { max-height: inherit; } #main_main_tbcAll_Placeholder_Project_Surveys { height: inherit !important; }";
+        $( '#knowledgeBetterCSS' ).append( vettingQAFrame );
     };    
 
 } else if(document.URL.indexOf("CurrentProjects.aspx") >= 0) {
