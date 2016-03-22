@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.2.1
+// @version      2.2.2
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.2.1";
-// Release notes: Cleaned up project name copy button and added frenchies
+var knowledgeBetterVer = "2.2.2";
+// Release notes: Tiny bug fix to client company label
 
 // Browser detection
 var isFirefox = typeof InstallTrigger !== 'undefined';
@@ -143,12 +143,17 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Frenchie tax
     $( 'body' ).append( '<div id="frenchiebtn" style="position: fixed; bottom: 5px; right: 5px; cursor: pointer;">[+]</div>' );
     $( 'body' ).append( '<div id="frenchie" class="frenchieHide" style="position: fixed; bottom: 2px; right: 0px; height: 83px; width: 100px; transform: scaleX(-1); z-index: 10; background: url(\'http://static.wixstatic.com/media/e41b48_54ff68b1a20a4f32bd61e7e8744712a5.gif\'); background-size: contain;"></div>' );
-    var frenchieBtnMagic = ".frenchieHide { display:none };"
+    var frenchieBtnMagic = ".frenchieHide { display:none }";
     $( '#knowledgeBetterCSS' ).append( frenchieBtnMagic );
     var frenchieBtn = document.querySelector('#frenchiebtn');
     frenchieBtn.addEventListener('click', function(event) {
         $( '#frenchiebtn' ).addClass('frenchieHide');
         $( '#frenchie' ).removeClass('frenchieHide');
+    });
+    var frenchiePic = document.querySelector('#frenchie');
+    frenchiePic.addEventListener('click', function(event) {
+        $( '#frenchie' ).addClass('frenchieHide');
+        $( '#frenchiebtn' ).removeClass('frenchieHide');
     });
     
     // Highlight important project details
