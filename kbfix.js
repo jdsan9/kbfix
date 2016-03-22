@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.2.3
+// @version      2.2.4
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
-// @grant        GM_setClipboard
+// @grant        none
 // @icon         https://www.crgstaff.com/favicon.ico
 // @include      https://www.crgstaff.com/*
 // @include      https://crgstaff.com/*
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.2.3";
-// Release notes: Global copy compatibility with GM flag
+var knowledgeBetterVer = "2.2.4";
+// Release notes: Reverting to 2.2.2
 
 // Browser detection
 var isFirefox = typeof InstallTrigger !== 'undefined';
@@ -271,15 +271,18 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Copy project name
     var projectNameAndId = document.querySelector('#projectDeetNewNameDiv');
     projectNameAndId = projectNameAndId.textContent;
-    $( 'body' ).append( "<img src='http://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy project name & ID to clipboard' onmouseover='this.src=\"http://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"http://i.imgur.com/HwRdEjY.png\"'></img>" );
+    $( 'body' ).append( "<img src='http://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy project name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"http://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"http://i.imgur.com/HwRdEjY.png\"'></img>" );
+    $( 'body' ).append( "<textarea class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + projectNameAndId + "</textarea>" );
     $( 'body' ).append( "<div id='copySuccessful'>Copied!</div>" );
     var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 53px; right: 0px; cursor: pointer; z-index: 10000; padding: 5px; }";
     var copiedSuccessfulAnim = "@keyframes copiedSuccess { from { opacity: 1; } to { opacity: 0; } } .copyClicked { animation-name: copiedSuccess; animation-duration: 1s; animation-timing-function: ease-out; }"
     var copySuccessfulStyles = "#copySuccessful { position: fixed; top: 12px; right: 10px; font-size: 30px; font-weight: bold; color: white; text-shadow: black 2px 2px 8px; z-index: 9999; opacity: 0; }";
     $( '#knowledgeBetterCSS' ).append( copyInfoBtnStyles + copiedSuccessfulAnim + copySuccessfulStyles );
-    var copyTextareaBtn = document.querySelector('#textAreaCopyBtn');
+    var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
     copyTextareaBtn.addEventListener('click', function(event) {
-        GM_setClipboard(projectNameAndId, "text");
+        var copyTextarea = document.querySelector('.js-copytextarea');
+        copyTextarea.select();
+        document.execCommand('copy');
         $( '#copySuccessful' ).addClass('copyClicked');
         setTimeout(function(){
             $( '#copySuccessful' ).removeClass('copyClicked');
