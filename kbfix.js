@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.2.4
+// @version      2.2.5
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.2.4";
-// Release notes: Reverting to 2.2.2
+var knowledgeBetterVer = "2.2.5";
+// Release notes: Member profile usability: profile cards and copy
 
 // Browser detection
 var isFirefox = typeof InstallTrigger !== 'undefined';
@@ -140,21 +140,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var stopHidingOnLeft = "div { text-indent: inherit !important; }";
     $( '#knowledgeBetterCSS' ).append( stopHidingOnLeft );
     
-    // Frenchie tax
-    $( 'body' ).append( '<div id="frenchiebtn" style="position: fixed; bottom: 5px; right: 5px; cursor: pointer;">[+]</div>' );
-    $( 'body' ).append( '<div id="frenchie" class="frenchieHide" style="position: fixed; bottom: 2px; right: 0px; height: 83px; width: 100px; transform: scaleX(-1); z-index: 10; background: url(\'http://static.wixstatic.com/media/e41b48_54ff68b1a20a4f32bd61e7e8744712a5.gif\'); background-size: contain;"></div>' );
-    var frenchieBtnMagic = ".frenchieHide { display:none }";
-    $( '#knowledgeBetterCSS' ).append( frenchieBtnMagic );
-    var frenchieBtn = document.querySelector('#frenchiebtn');
-    frenchieBtn.addEventListener('click', function(event) {
-        $( '#frenchiebtn' ).addClass('frenchieHide');
-        $( '#frenchie' ).removeClass('frenchieHide');
-    });
-    var frenchiePic = document.querySelector('#frenchie');
-    frenchiePic.addEventListener('click', function(event) {
-        $( '#frenchie' ).addClass('frenchieHide');
-        $( '#frenchiebtn' ).removeClass('frenchieHide');
-    });
     
     // Highlight important project details
     
@@ -314,6 +299,18 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var recruitCountDisplayed = findInSource.split(numRecruits).length-1;
         recruitCountLoc.textContent = recruitCount+" | "+recruitCountDisplayed+" Displayed";
         
+        // Bundle & sort leads
+        /*
+        var leadRow = $("#main_main_tbcAllProject_Leads_rptLeads_tblRepeater > tbody > tr");
+        for(var i = 0; i < leadRow.length; i+=3) {
+            leadRow.slice(i, i+3).wrapAll("<tbody class='lead'></tbody>");
+        };
+        $( ".lead:odd" ).addClass( "leadalt" );
+        var leadRowStyle = ".lead > tr { background-color: inherit !important; } .leadalt > tr { background-color: #F7F7F7 !important; }";
+        $( '#knowledgeBetterCSS' ).append( leadRowStyle );
+        */
+        
+        
     } else if (document.getElementById("main_main_tbcAllProject_AdvisorSearch_pnlMain")) {
         // Expert search 
         
@@ -412,6 +409,50 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Adjust header for data review info
     $("#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0_lblCurrentReviewer_0").appendTo("#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lnkEFMReviewRequired_0");
     
+    // Copy expert name
+    var expertNameAndId = document.querySelector('#expertDeetNewNameDiv');
+    expertNameAndId = expertNameAndId.textContent;
+    $( 'body' ).append( "<img src='http://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy expert name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"http://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"http://i.imgur.com/HwRdEjY.png\"'></img>" );
+    $( 'body' ).append( "<textarea class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + expertNameAndId + "</textarea>" );
+    $( 'body' ).append( "<div id='copySuccessful'>Copied!</div>" );
+    var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 52px; right: 0px; cursor: pointer; z-index: 10000; padding: 5px; }";
+    var copiedSuccessfulAnim = "@keyframes copiedSuccess { from { opacity: 1; } to { opacity: 0; } } .copyClicked { animation-name: copiedSuccess; animation-duration: 1s; animation-timing-function: ease-out; }"
+    var copySuccessfulStyles = "#copySuccessful { position: fixed; top: 12px; right: 10px; font-size: 30px; font-weight: bold; color: white; text-shadow: black 2px 2px 8px; z-index: 9999; opacity: 0; }";
+    $( '#knowledgeBetterCSS' ).append( copyInfoBtnStyles + copiedSuccessfulAnim + copySuccessfulStyles );
+    var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
+    copyTextareaBtn.addEventListener('click', function(event) {
+        var copyTextarea = document.querySelector('.js-copytextarea');
+        copyTextarea.select();
+        document.execCommand('copy');
+        $( '#copySuccessful' ).addClass('copyClicked');
+        setTimeout(function(){
+            $( '#copySuccessful' ).removeClass('copyClicked');
+        }, 1000);
+    });
+    
+    // Float expert name in top right
+    var floatingExpertName = document.createElement("div");
+    floatingExpertName.innerHTML = expertNameAndId;
+    floatingExpertName.id = "floatingExpertNameDiv";
+    document.body.appendChild(floatingExpertName);
+    var floatingExpertNameCss = "#floatingExpertNameDiv { position:fixed;top:55px;right:25px;font-weight:bold;font-size:Small;display:block;z-index:999; }";
+    $( '#knowledgeBetterCSS' ).append( floatingExpertNameCss );
+    
+    // LinkedIn Profile Card
+    if (document.getElementById("main_lnkLinkedIn")) {
+        var liProfileDirty = document.getElementById("main_lnkLinkedIn").getAttribute("onclick");
+        liProfileURLStep = liProfileDirty.replace("javascript:return _b('", "");
+        liProfileURLClean = liProfileURLStep.replace("',800,750);", "");
+        $( 'body' ).append('<div id="licardWrapper"><script src="//platform.linkedin.com/in.js" type="text/javascript"></script><script type="IN/MemberProfile" data-id="' + liProfileURLClean + '" data-format="inline"></script></div>');
+        $( '#licardWrapper' ).addClass( 'licardHide' );
+        $( '#main_lnkLinkedIn' ).after('<div id="licardtoggle">Toggle Profile Card</div>');
+        var linkedinCard = ".IN-widget { position: fixed; top: 110px; left: 40px; box-shadow: rgba(51, 51, 51, 0.5) 4px 4px 12px; z-index: 999; } #licardtoggle { display: inline; border-bottom: 1px dotted; color: #3300ff; margin-left: 7px; cursor: pointer; } .licardHide { display:none !important; }";
+        $( '#knowledgeBetterCSS' ).append( linkedinCard );
+        var licardBtn = document.querySelector('#licardtoggle');
+        licardBtn.addEventListener('click', function(event) {
+            $( '#licardWrapper' ).toggleClass('licardHide');
+        });
+    };
     
     // EXPERT or PROSPECT tag on top right
     var expertTagOrProspectTag = document.querySelector('#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0__lblPresentableLabelValue_0');
@@ -555,6 +596,22 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     
 };
 
+
+// Frenchie tax
+    $( 'body' ).append( '<div id="frenchiebtn" style="position: fixed; bottom: 5px; right: 5px; cursor: pointer;">[+]</div>' );
+    $( 'body' ).append( '<div id="frenchie" class="frenchieHide" style="position: fixed; bottom: 2px; right: 0px; height: 83px; width: 100px; transform: scaleX(-1); z-index: 10; background: url(\'http://static.wixstatic.com/media/e41b48_54ff68b1a20a4f32bd61e7e8744712a5.gif\'); background-size: contain;"></div>' );
+    var frenchieBtnMagic = ".frenchieHide { display:none }";
+    $( '#knowledgeBetterCSS' ).append( frenchieBtnMagic );
+    var frenchieBtn = document.querySelector('#frenchiebtn');
+    frenchieBtn.addEventListener('click', function(event) {
+        $( '#frenchiebtn' ).addClass('frenchieHide');
+        $( '#frenchie' ).removeClass('frenchieHide');
+    });
+    var frenchiePic = document.querySelector('#frenchie');
+    frenchiePic.addEventListener('click', function(event) {
+        $( '#frenchie' ).addClass('frenchieHide');
+        $( '#frenchiebtn' ).removeClass('frenchieHide');
+    });
 
 
 // Source signature
