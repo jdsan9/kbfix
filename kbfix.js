@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.2.5
+// @version      2.3.0
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,16 +17,40 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.2.5";
-// Release notes: Member profile usability: profile cards and copy
+var knowledgeBetterVer = "2.3.0";
+// Release notes: User IDs and browser wars (FF EoL)
 
-// Browser detection
-var isFirefox = typeof InstallTrigger !== 'undefined';
+// Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
+var isFirefox = typeof InstallTrigger !== 'undefined';
+if (isFirefox === true) {
+    var ffErrMsg = "Thank you for using the <b>KnowledgeBetter</b> plugin!<br/>Firefox is no longer supported. Switch to Chrome for additional features and more!<br/>You can hide this message by disabling the monkey plugin above.";
+    $('body').append('<div style="position:fixed;top:9px;right:9px;text-align:right;font-size:x-small;z-index:10000;">'+ffErrMsg+'</div>');
+    throw new Error( 'Firefox is no longer supported. The KnowledgeBetter script has been halted. Revert to v2.2.x to continue using this plugin. Note that some features may not work correctly or at all.' );
+    // Revert to v2.2.x to continue using this plugin.
+};
 
 // KnowledgeBetter CSS container
-$( "body" ).append( '<style type="text/css" id="knowledgeBetterCSS"></style>' );
+$( 'body' ).append( '<style type="text/css" id="knowledgeBetterCSS"></style>' );
 var knowledgeBetterCSS = document.getElementById('#knowledgeBetterCSS');
+
+// Init user variables
+if (isChrome === true) {
+    var userIDLoc = document.querySelector("#_panelMenu__lblWelcome");
+    var userID = userIDLoc.innerText.replace("Welcome ", "");
+    userID = "jack"
+         if (userID == "jsanders") { uIDrecognize = true; var userIDTag = "Sanders, J."; var userFN = "Joe"; var userLN = "Sanders"; }
+    else if (userID == "parmes") { uIDrecognize = true; var userIDTag = "Armes, P."; var userFN = "Pippa"; var userLN = "Armes"; }
+    else if (userID == "swinter") { uIDrecognize = true; var userIDTag = "Winter, S."; var userFN = "Sarah"; var userLN = "Winter"; }
+    else if (userID == "ksanders") { uIDrecognize = true; var userIDTag = "Sanders, K."; var userFN = "Kevin"; var userLN = "Sanders"; }
+    else if (userID == "ebrooks") { uIDrecognize = true; var userIDTag = "Brooks, E."; var userFN = "Eric"; var userLN = "Brooks"; }
+    else if (userID == "agilmore") { uIDrecognize = true; var userIDTag = "Gilmore, A."; var userFN = "Austin"; var userLN = "Gilmore"; }
+    else if (userID == "dmarina") { uIDrecognize = true; var userIDTag = "Marina, D."; var userFN = "David"; var userLN = "Marina"; }
+    else if (userID == "emabunga") { uIDrecognize = true; var userIDTag = "Mabunga, E."; var userFN = "Elicia"; var userLN = "Mabunga"; }
+    else if (userID == "awillard") { uIDrecognize = true; var userIDTag = "Willard, A."; var userFN = "Andy"; var userLN = "Willard"; }
+    else if (userID == "klindholm") { uIDrecognize = true; var userIDTag = "Lindholm, K."; var userFN = "Kyle"; var userLN = "Lindholm"; }
+    else { throw new Error( 'Unrecognized user. Please uninstall this plugin.' ); };
+};
 
 
 // Global changes
@@ -51,7 +75,7 @@ $( '#knowledgeBetterCSS' ).append( lockTypeAheadPositionCss );
 
 // Restyle sticky header bar
 $('#_panelMenu').removeClass("dxrpControl_Office2010Blue");
-var stickyBarRestyleCss = "#_panelMenu { background: linear-gradient(#B6CDE5, #F7F7F7) !important; border-bottom: #BAC9D8 1px solid; box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31); height: 55px; }";
+var stickyBarRestyleCss = "#_panelMenu { background: linear-gradient(#B6CDE5, #F7F7F7) !important; border-bottom: #BAC9D8 1px solid; box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.31); height: 55px; } #_panelMenu__lblWelcome { font-size: X-Small !important; }";
 $( '#knowledgeBetterCSS' ).append( stickyBarRestyleCss );
 var tlCorner = document.querySelector('.dxWeb_rpTopLeftCorner_Office2010Blue');
 tlCorner.style.display = "none";
@@ -66,6 +90,13 @@ brCorner.style.display = "none";
 $('head').append('<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">');
 var fontEntirePage = "body { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } span { font-family: 'Open Sans', sans-serif !important; } .masterContent td { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .tabmenu span { font-size: 12px; } .fieldLabel { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .dxeBase_Office2010Blue { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; } .dxeListBoxItem_Office2010Blue { font-family: 'Open Sans', sans-serif !important; font-size: 12px !important; }";
 $( '#knowledgeBetterCSS' ).append( fontEntirePage );
+
+// Make login name more appealing to user
+if (isChrome === true) {
+    if (uIDrecognize == true) { 
+        userIDLoc.innerText = 'Logged in as ' + userFN + ' ' + userLN; 
+    };
+};
 
 
 // Page-specific changes
@@ -117,9 +148,10 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     floatingProjectName.innerHTML = projectNameValue;
     floatingProjectName.id = "floatingProjectNameDiv";
     document.body.appendChild(floatingProjectName);
-    var floatingProjectNameCss = "#floatingProjectNameDiv { position:fixed;top:56px;right:25px;display:block;z-index:999; }";
+    var floatingProjectNameCss = "#floatingProjectNameDiv { position:fixed;top:58px;right:25px;display:block;z-index:999; } #floatingProjectNameDiv span { font-size:11px !important; }";
     $( '#knowledgeBetterCSS' ).append( floatingProjectNameCss );
-    document.getElementById("floatingProjectNameDiv").innerHTML = document.getElementById("floatingProjectNameDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 12px !important; display: inline; color: red;">(Anonymous)</div>')
+    document.getElementById("floatingProjectNameDiv").innerHTML = document.getElementById("floatingProjectNameDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 11px !important; display: inline; color: red;">(Anonymous)</div>')
+    $( '#floatingProjectNameDiv > span > a' ).remove();
     
     // Pin tab menu to top bar when scrolled past via jQuery
     var pinnedTabMenuCss = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 63px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:999;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px #BAC9D8; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
@@ -140,49 +172,36 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var stopHidingOnLeft = "div { text-indent: inherit !important; }";
     $( '#knowledgeBetterCSS' ).append( stopHidingOnLeft );
     
+    // Vetting Q&A tab
+    var vettingSurveyStyles = "div.questions.ng-scope.ng-isolate-scope { margin-top: 50px; } .questions { border: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( vettingSurveyStyles );
+    
+    // Show last update time/date and user
+    var projUp = document.querySelector('#main__lblUpdatedBy').innerHTML;
+    var projUpDate = document.querySelector('#main__lblUpdatedByDate').innerHTML;
+    var projUpDiv = "<div id='projup'>Last updated by <b class='pudrk'>"+projUp+"</b> on <b class='pudrk'>"+projUpDate+"</b></div>";
+    $( 'body' ).append( projUpDiv );
+    var projUpStyles = "#projup { position: absolute; top: 88px; right: 10px; color: #BBBBBB; font-size: 9px !important; text-transform: uppercase; } .pudrk { color: #999999; }";
+    $( '#knowledgeBetterCSS' ).append( projUpStyles );
+    
     
     // Highlight important project details
     
-    // Client Company
-    var projectDeetClientCom = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClient_0');
-    projectDeetClientCom.style.fontSize = "20px";
-    projectDeetClientCom.style.fontWeight = "bold";
-    projectDeetClientCom.style.textDecoration = "none";
-    var projectDeetClientComLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(1) { display: none !important; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetClientComLabel );
-    var projectDeetClientComPos = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) { position: absolute; top: 72px; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetClientComPos );
-    
-    // Client Analyst
-    var projectDeetClientAnalyst = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkContact_0');
-    projectDeetClientAnalyst.style.fontSize = "15px";
-    projectDeetClientAnalyst.style.textDecoration = "none";
-    var projectDeetClientAnalystLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(2) > td:nth-of-type(1) { display: none !important; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystLabel );
-    var projectDeetClientAnalystPos = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) { position: absolute; top: 102px; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystPos );
-    
-    // Target Companies
-    var projectDeetTargets = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblTargetCompanies_0');
-    projectDeetTargets.style.color = "red";
-    projectDeetTargets.style.fontWeight = "bold";
+    // Add row selectors
+    $("#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-child(2) > table > tbody").attr( "id", "detailBody" );
+    $(document).ready(function() {
+        $("#detailBody tr").each(function(i) {
+            $(this).attr( "id", "detailRow" + (i+1));
+        });
+    });
     
     // Project details list & container
     var projectDeetTable = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 218px 10px 5px 5px !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetTable );
     
-    // 'View Client Rules' button
-    jQuery(document).ready(function() {
-        var $ca = jQuery('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkContact_0'),
-        $vcr = $('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClientRule_0').insertAfter($ca);
-        $vcr.css({
-            position : 'absolute',
-            top : '28px',
-            left : '2px'
-        });
-    });
-    var projectDeetClientRule = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClientRule_0 { text-decoration: none; text-transform: uppercase; font-size: 10px; cursor: pointer; z-index: 10; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetClientRule );   
+    // Set width of project detail table labels column
+    var projectDeetLabelCol = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr > td:nth-of-type(1) { width: 140px !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetLabelCol );
     
     // Hide old project name w/ collapse button & center newly styled project name
     var projectDeetNameBar = "#main_projectView__navProjectView_GHE0 { display: none; }";
@@ -198,40 +217,39 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     $( '#knowledgeBetterCSS' ).append( projectDeetNewNameCss );
     document.getElementById("projectIdActualDiv").innerHTML = document.getElementById("projectIdActualDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 18px !important; display: inline; color: red;">(Anonymous)</div>');
     
-    // Set width of project detail table labels column
-    var projectDeetLabelCol = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr > td:nth-of-type(1) { width: 140px !important; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetLabelCol );
+    // Move email tracking link to more appropriate location
+    $('#projectIdActualDiv > a').attr('id', 'emailTrackingLink');
+    $( '#emailTrackingLink' ).appendTo( 'body' );
+    var emailTrackingLinkStyle = "#emailTrackingLink { position: absolute; top: 102px; right: 10px; text-decoration: none; text-transform: uppercase; font-size: 9px; font-weight: bold; color: #999999; }";
+    $( '#knowledgeBetterCSS' ).append( emailTrackingLinkStyle );
     
-    // AM info
-    var projectDeetAMLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(1) { display: none !important; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetAMLabel );
-    var projectDeetAM = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(2) { position: absolute; top: 160px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(17) > td:nth-of-type(2):after { content: ' Account Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetAM );
+    // 1 Client Company
+    var projectDeetClientCom = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClient_0');
+    projectDeetClientCom.style.fontSize = "20px";
+    projectDeetClientCom.style.fontWeight = "bold";
+    projectDeetClientCom.style.textDecoration = "none";
+    var projectDeetClientComLabel = "#detailRow1 > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientComLabel );
+    var projectDeetClientComPos = "#detailRow1 > td:nth-of-type(2) { position: absolute; top: 72px; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientComPos );
     
-    // PM info
-    var projectDeetPMLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(1) { display: none !important; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetPMLabel );
-    var projectDeetPM = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(2) { position: absolute; top: 180px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(18) > td:nth-of-type(2):after { content: ' Project Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetPM );
+    // 2 Client Analyst 6
+    var projectDeetClientAnalyst = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkContact_0');
+    projectDeetClientAnalyst.style.fontSize = "15px";
+    projectDeetClientAnalyst.style.textDecoration = "none";
+    var projectDeetClientAnalystLabel = "#detailRow6 > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystLabel );
+    var projectDeetClientAnalystPos = "#detailRow6 > td:nth-of-type(2) { position: absolute; top: 102px; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystPos );
     
-    // Primary Associate info
-    var projectDeetPALabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(1) { display: none !important; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetPALabel );
-    var projectDeetPA = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(2) { position: absolute; top: 210px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(19) > td:nth-of-type(2):after { content: ' Primary Associate'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetPA );
-    
-    // Secondary Associate(s) info
-    var projectDeetSALabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(1) { display: none !important; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetSALabel );
-    var projectDeetSA = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2) { position: absolute; top: 230px; font-size: 14px !important; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) > td:nth-of-type(2):after { content: ' Secondary Associate(s)'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
-    $( '#knowledgeBetterCSS' ).append( projectDeetSA );
-    var getSAInfo = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblResearchers_0');
-    if (getSAInfo.innerHTML === "None") {
-        var hideSAInfo = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(20) { display: none !important; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 198px 10px 5px 5px !important; }";
-        $( '#knowledgeBetterCSS' ).append( hideSAInfo );
+    // 7 Client Code 11
+    var projectDeetClientCode = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblClientCode_0').innerHTML;
+    if (projectDeetClientCode == "") {
+        var projectDeetClientCodeHidden = "#detailRow11 { display: none !important; }";
+        $( '#knowledgeBetterCSS' ).append( projectDeetClientCodeHidden );
     };
-    
-    // Client Company Type
+     
+    // 8 Client Company Type 12
     var clientTypeRaw = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblCompanyType_0');
     if (clientTypeRaw.innerHTML === "HedgeFund") {
         clientTypeRaw.innerHTML = "Hedge Fund";
@@ -241,23 +259,119 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         clientTypeRaw.innerHTML = "Mutual Fund";
     } else if (clientTypeRaw.innerHTML === "ConsultingFirm") {
         clientTypeRaw.innerHTML = "Consulting Firm";
+    } else if (clientTypeRaw.innerHTML === "InvestmentAdvisor") {
+        clientTypeRaw.innerHTML = "Investment Advisor";
     } else {
         clientTypeRaw = clientTypeRaw;
     };
-    var projectDeetClTypeLabel = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(1) { display: none !important; }";
+    var projectDeetClTypeLabel = "#detailRow12 > td:nth-of-type(1) { display: none !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClTypeLabel );
-    var projectDeetClType = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table > tbody > tr:nth-of-type(8) > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
+    var projectDeetClType = "#detailRow12 > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #detailRow12 > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClType );
     
-    // Vetting Q&A tab
-    var vettingSurveyStyles = "div.questions.ng-scope.ng-isolate-scope { margin-top: 50px; } .questions { border: none !important; }";
-    $( '#knowledgeBetterCSS' ).append( vettingSurveyStyles );
+    // Highlght Target Companies
+    var projectDeetTargets = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblTargetCompanies_0');
+    if (projectDeetTargets.innerHTML != "None") {
+        projectDeetTargets.style.color = "red";
+        projectDeetTargets.style.fontWeight = "bold";
+    };  
     
-    // Copy project name
+    // 17 AM info 21
+    var projectDeetAMLabel = "#detailRow21 > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetAMLabel );
+    var projectDeetAM = "#detailRow21 > td:nth-of-type(2) { position: absolute; top: 160px; font-size: 14px !important; font-weight: bold; } #detailRow21 > td:nth-of-type(2):after { content: ' Account Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetAM );
+    
+    // 18 PM info 22
+    var projectDeetPMLabel = "#detailRow22 > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPMLabel );
+    var projectDeetPM = "#detailRow22 > td:nth-of-type(2) { position: absolute; top: 180px; font-size: 14px !important; font-weight: bold; } #detailRow22 > td:nth-of-type(2):after { content: ' Project Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPM );
+    
+    // 19 Primary Associate info 23
+    var projectDeetPALabel = "#detailRow23 > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPALabel );
+    var projectDeetPA = "#detailRow23 > td:nth-of-type(2) { position: absolute; top: 210px; font-size: 14px !important; font-weight: bold; } #detailRow23 > td:nth-of-type(2):after { content: ' Primary Associate'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetPA );
+    
+    // 20 Secondary Associate(s) info 24
+    var projectDeetSALabel = "#detailRow24 > td:nth-of-type(1) { display: none !important; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetSALabel );
+    var projectDeetSA = "#detailRow24 > td:nth-of-type(2) { position: absolute; top: 230px; font-size: 14px !important; font-weight: bold; } #detailRow24 > td:nth-of-type(2):after { content: ' Secondary Associate(s)'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetSA );
+    var getSAInfo = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblResearchers_0');
+    if (getSAInfo.innerHTML === "None") {
+        var hideSAInfo = "#detailRow24 { display: none !important; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 198px 10px 5px 5px !important; }";
+        $( '#knowledgeBetterCSS' ).append( hideSAInfo );
+    };
+    
+    // 23 Cloned Project ID 27
+    var clonedProjID = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblClonedProjectId_0').innerHTML;
+    if (clonedProjID == "") {
+        var clonedProjIDHidden = "#detailRow27 { display: none !important; }";
+        $( '#knowledgeBetterCSS' ).append( clonedProjIDHidden );
+    };
+    
+    // 24 Client Requested Calls 28
+    var nCalls = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblClientRequestedCalls_0').innerHTML;
+    if (nCalls == "") {
+        var nCallsHidden = "#detailRow28 { display: none !important; }";
+        $( '#knowledgeBetterCSS' ).append( nCallsHidden );
+    };
+    document.querySelector('#detailRow24 > td:nth-child(1) > span').innerHTML = "&#8470; Calls Requested:";
+    
+    // 25 Highlight if end date has passed 29
+    var projEndDateRaw = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblProjectEndDate_0').innerHTML;
+    if (projEndDateRaw != "") {
+        var projEndMonth = parseInt(projEndDateRaw.split("/")[0]);
+        var projEndDay = parseInt(projEndDateRaw.split("/")[1]);
+        var projEndYear = parseInt(projEndDateRaw.split("/")[2]);
+        var projEndDate = new Date();
+        projEndDate.setFullYear(projEndYear, projEndMonth - 1, projEndDay);
+        var todayDate = new Date();
+        var numDaysBetween = function(d1, d2) {
+            var diff = Math.abs(d1.getTime() - d2.getTime());
+            return diff / 86400000;
+        };
+        var timeDiff = numDaysBetween(projEndDate, todayDate);
+        if (todayDate > projEndDate) {
+            var projEndDatePassed = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblProjectEndDate_0 { color: red !important; font-weight: bold !important; }";
+            $( '#knowledgeBetterCSS' ).append( projEndDatePassed );
+        } else if (timeDiff <= 3) {
+            var projEndDateNear = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblProjectEndDate_0 { color: #E09100 !important; font-weight: bold !important; }";
+            $( '#knowledgeBetterCSS' ).append( projEndDateNear );
+        };
+    } else {
+        var projEndDateMissing = "#detailRow29 { display: none; }";
+        $( '#knowledgeBetterCSS' ).append( projEndDateMissing );
+    };
+    
+    // View Client Rules button
+    jQuery(document).ready(function() {
+        var $ca = jQuery('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkContact_0'),
+        $vcr = $('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClientRule_0').insertAfter($ca);
+        $vcr.css({
+            position : 'absolute',
+            top : '28px',
+            left : '2px'
+        });
+    });
+    var projectDeetClientRule = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkClientRule_0 { text-decoration: none; text-transform: uppercase; font-size: 10px; cursor: pointer; z-index: 10; }";
+    $( '#knowledgeBetterCSS' ).append( projectDeetClientRule ); 
+    
+    // Highlight if current user is listed in project details [Chrome-only]
+    if (isChrome === true) {
+        if ( uIDrecognize === true) {
+            var uFLNregex = new RegExp(userFN+" "+userLN, "g");
+            $("#main_projectView__navProjectView_ITC0i0__projectViewDetail_0").html($("#main_projectView__navProjectView_ITC0i0__projectViewDetail_0").html().replace(uFLNregex,"<div style='display: inline; color: green;'>"+userFN+" "+userLN+"</div>"));
+        };
+    };
+    
+    // Copy project name [After detail tweaks for clean project name/ID]
     var projectNameAndId = document.querySelector('#projectDeetNewNameDiv');
     projectNameAndId = projectNameAndId.textContent;
     $( 'body' ).append( "<img src='http://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy project name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"http://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"http://i.imgur.com/HwRdEjY.png\"'></img>" );
-    $( 'body' ).append( "<textarea class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + projectNameAndId + "</textarea>" );
+    $( 'body' ).append( "<textarea readonly class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + projectNameAndId + "</textarea>" );
     $( 'body' ).append( "<div id='copySuccessful'>Copied!</div>" );
     var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 53px; right: 0px; cursor: pointer; z-index: 10000; padding: 5px; }";
     var copiedSuccessfulAnim = "@keyframes copiedSuccess { from { opacity: 1; } to { opacity: 0; } } .copyClicked { animation-name: copiedSuccess; animation-duration: 1s; animation-timing-function: ease-out; }"
@@ -273,12 +387,14 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
             $( '#copySuccessful' ).removeClass('copyClicked');
         }, 1000);
     });
+    
         
     // Project page tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
     var allTablesProjPageIndex = allTablesProjPage.length;
     document.getElementsByTagName("table")[allTablesProjPageIndex - 1].style.display = "none";
     document.getElementsByTagName("table")[allTablesProjPageIndex - 2].style.display = "none";
+    $( '#form1 > div.masterContent > div > table > tbody > tr:nth-child(5)' ).css( 'display', 'none' )
     if (document.getElementById("main_main_tbcAllProject_Leads_pnlLeads")) {
         // Recruits 
         
@@ -299,6 +415,14 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         var recruitCountDisplayed = findInSource.split(numRecruits).length-1;
         recruitCountLoc.textContent = recruitCount+" | "+recruitCountDisplayed+" Displayed";
         
+        // Highlight logged-in user's recruiting history [Chrome-only]
+        if (isChrome === true) {
+            if ( uIDrecognize === true) {
+                var uIDregex = new RegExp(userIDTag, "g");
+                $("#main_main_tbcAllProject_Leads_pnlLeads").html($("#main_main_tbcAllProject_Leads_pnlLeads").html().replace(uIDregex,'<div style="display: inline; color: green; font-weight: bold;">'+userIDTag+'</div>'));
+            };
+        };
+            
         // Bundle & sort leads
         /*
         var leadRow = $("#main_main_tbcAllProject_Leads_rptLeads_tblRepeater > tbody > tr");
@@ -446,7 +570,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         $( 'body' ).append('<div id="licardWrapper"><script src="//platform.linkedin.com/in.js" type="text/javascript"></script><script type="IN/MemberProfile" data-id="' + liProfileURLClean + '" data-format="inline"></script></div>');
         $( '#licardWrapper' ).addClass( 'licardHide' );
         $( '#main_lnkLinkedIn' ).after('<div id="licardtoggle">Toggle Profile Card</div>');
-        var linkedinCard = ".IN-widget { position: fixed; top: 110px; left: 40px; box-shadow: rgba(51, 51, 51, 0.5) 4px 4px 12px; z-index: 999; } #licardtoggle { display: inline; border-bottom: 1px dotted; color: #3300ff; margin-left: 7px; cursor: pointer; } .licardHide { display:none !important; }";
+        var linkedinCard = "#licardWrapper { position: fixed; top: 110px; left: 40px; box-shadow: rgba(51, 51, 51, 0.5) 4px 4px 12px; z-index: 999; } #licardtoggle { display: inline; border-bottom: 1px dotted; color: #3300ff; margin-left: 7px; cursor: pointer; } .licardHide { display:none !important; }";
         $( '#knowledgeBetterCSS' ).append( linkedinCard );
         var licardBtn = document.querySelector('#licardtoggle');
         licardBtn.addEventListener('click', function(event) {
@@ -499,20 +623,25 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         $stickyEl.toggleClass('pinned', $window.scrollTop() > elTop - 60);
     });
     
-    // Expand and restyle expert bio after determining FF v Chrome
-    if ( isFirefox === true ) {
-        var expInfoBox = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(2) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
-        $( '#knowledgeBetterCSS' ).append( expInfoBox );
-    } else {
-        var expInfoBox = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(3) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
-        $( '#knowledgeBetterCSS' ).append( expInfoBox );
-    };
+    // Expand and restyle expert bio
+    var expInfoBox = "#main__navAdvisorProfile_ITC0i0__advisorProfileDetail_0 > table:nth-of-type(3) > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: 380px !important; border: solid 3px #E6E6E6 !important; background: white; }";
+    $( '#knowledgeBetterCSS' ).append( expInfoBox );
     
     // Do Not Use button restyle & reconfigure
     $("#main_lnkDoNotUseReactivate").appendTo("body");
     document.querySelector('#main_lnkDoNotUseReactivate').innerHTML = "Do Not Use";
     var doNotUseBtnCss = "#main_lnkDoNotUseReactivate { position: absolute; top: 88px; right: 8px; text-decoration: none; z-index: 980; opacity: 0.75; } #main_lnkDoNotUseReactivate:hover { opacity: 1; color: red; } #main_lnkDoNotUseReactivate:hover:before { content: 'Flag this profile as '; }";
     $( '#knowledgeBetterCSS' ).append( doNotUseBtnCss );
+    
+    // Highlight logged-in user history notes [Chrome-only]
+    if (document.getElementById("main_main_tbcAllHistory_pnlNotes")) {
+        if (isChrome === true) {
+            if ( uIDrecognize === true) {
+                var pofileUIDregex = new RegExp(userIDTag, "g");
+                $("#main_main_tbcAllHistory_pnlNotes").html($("#main_main_tbcAllHistory_pnlNotes").html().replace(pofileUIDregex,'<div style="display: inline; color: green; font-weight: bold;">'+userIDTag+'</div>'));
+            };
+        };
+    };
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
@@ -597,22 +726,33 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 };
 
 
-// Frenchie tax
-    $( 'body' ).append( '<div id="frenchiebtn" style="position: fixed; bottom: 5px; right: 5px; cursor: pointer;">[+]</div>' );
-    $( 'body' ).append( '<div id="frenchie" class="frenchieHide" style="position: fixed; bottom: 2px; right: 0px; height: 83px; width: 100px; transform: scaleX(-1); z-index: 10; background: url(\'http://static.wixstatic.com/media/e41b48_54ff68b1a20a4f32bd61e7e8744712a5.gif\'); background-size: contain;"></div>' );
-    var frenchieBtnMagic = ".frenchieHide { display:none }";
-    $( '#knowledgeBetterCSS' ).append( frenchieBtnMagic );
-    var frenchieBtn = document.querySelector('#frenchiebtn');
-    frenchieBtn.addEventListener('click', function(event) {
-        $( '#frenchiebtn' ).addClass('frenchieHide');
-        $( '#frenchie' ).removeClass('frenchieHide');
-    });
-    var frenchiePic = document.querySelector('#frenchie');
-    frenchiePic.addEventListener('click', function(event) {
-        $( '#frenchie' ).addClass('frenchieHide');
-        $( '#frenchiebtn' ).removeClass('frenchieHide');
-    });
+
+// Frenchie tax [Chrome-only]
+if (isChrome === true) {
+    if ( uIDrecognize === true) {
+        if (userID == "parmes" || userID == "jsanders" || userID == "ksanders" ) {
+            $( 'body' ).append( '<div id="frenchiebtn" style="position: fixed; bottom: 5px; right: 5px; cursor: pointer;">[+]</div>' );
+            $( 'body' ).append( '<div id="frenchie" class="frenchieHide" style="position: fixed; bottom: 2px; right: 0px; height: 83px; width: 100px; transform: scaleX(-1); z-index: 10; background: url(\'http://static.wixstatic.com/media/e41b48_54ff68b1a20a4f32bd61e7e8744712a5.gif\'); background-size: contain;"></div>' );
+            var frenchieBtnMagic = ".frenchieHide { display:none }";
+            $( '#knowledgeBetterCSS' ).append( frenchieBtnMagic );
+            var frenchieBtn = document.querySelector('#frenchiebtn');
+            frenchieBtn.addEventListener('click', function(event) {
+                $( '#frenchiebtn' ).addClass('frenchieHide');
+                $( '#frenchie' ).removeClass('frenchieHide');
+            });
+            var frenchiePic = document.querySelector('#frenchie');
+            frenchiePic.addEventListener('click', function(event) {
+                $( '#frenchie' ).addClass('frenchieHide');
+                $( '#frenchiebtn' ).removeClass('frenchieHide');
+            });
+        };
+    };
+};
 
 
 // Source signature
 $("html").before("<!-- Injected with KnowledgeBetter v" + knowledgeBetterVer + " -->");
+
+
+// for AG
+// document.title = document.title.replace("- Knowledge Broker", "");
