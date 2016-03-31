@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.3.0
+// @version      2.3.1
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.3.0";
-// Release notes: User IDs and browser wars (FF EoL)
+var knowledgeBetterVer = "2.3.1";
+// Release notes: Removed debug string
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
@@ -38,7 +38,6 @@ var knowledgeBetterCSS = document.getElementById('#knowledgeBetterCSS');
 if (isChrome === true) {
     var userIDLoc = document.querySelector("#_panelMenu__lblWelcome");
     var userID = userIDLoc.innerText.replace("Welcome ", "");
-    userID = "jack"
          if (userID == "jsanders") { uIDrecognize = true; var userIDTag = "Sanders, J."; var userFN = "Joe"; var userLN = "Sanders"; }
     else if (userID == "parmes") { uIDrecognize = true; var userIDTag = "Armes, P."; var userFN = "Pippa"; var userLN = "Armes"; }
     else if (userID == "swinter") { uIDrecognize = true; var userIDTag = "Winter, S."; var userFN = "Sarah"; var userLN = "Winter"; }
