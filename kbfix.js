@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.3.1
+// @version      2.4.0
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,15 +17,15 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.3.1";
-// Release notes: Removed debug string
+var knowledgeBetterVer = "2.4.0";
+// Release notes: Proactive ghosting and clickable URLs, emails, and IDs in history notes
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
 var isFirefox = typeof InstallTrigger !== 'undefined';
 if (isFirefox === true) {
     var ffErrMsg = "Thank you for using the <b>KnowledgeBetter</b> plugin!<br/>Firefox is no longer supported. Switch to Chrome for additional features and more!<br/>You can hide this message by disabling the monkey plugin above.";
-    $('body').append('<div style="position:fixed;top:9px;right:9px;text-align:right;font-size:x-small;z-index:10000;">'+ffErrMsg+'</div>');
+    $('body').append('<div style="position:fixed;top:7px;right:9px;text-align:right;font-size:x-small;z-index:10000;">'+ffErrMsg+'</div>');
     throw new Error( 'Firefox is no longer supported. The KnowledgeBetter script has been halted. Revert to v2.2.x to continue using this plugin. Note that some features may not work correctly or at all.' );
     // Revert to v2.2.x to continue using this plugin.
 };
@@ -110,20 +110,10 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     topSpacerHeight.style.top = "16px";
     var projectDetailTitle = document.querySelector(".pageTitle");
     projectDetailTitle.textContent = "";
-
+    
     // Extend project info box
-    function findFirstDescendantById(parent, tagname) {
-       parent = document.getElementById(parent);
-       var descendants = parent.getElementsByTagName(tagname);
-       if ( descendants.length )
-           return descendants[0];
-       return null;
-    }
-    var infoBox = findFirstDescendantById("main_projectView__navProjectView_ITC0i0__projectViewDetail_0", "div");
-    infoBox.style.height = "560px";
-    infoBox.style.border = "solid 3px #E6E6E6";
-    infoBox.style.maxWidth = "900px";
-    infoBox.style.background = "white";
+    var infoBoxStyle = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { min-height: 560px; border: solid 3px #E6E6E6 !important; max-width: 900px; background: white; }";
+    $( '#knowledgeBetterCSS' ).append( infoBoxStyle );
     
     // Tweak Project Information window location & visuals
     var projectDeetInfoPane = "#main_projectView__navProjectView_GCA0 { margin-top: 30px; }";
@@ -369,7 +359,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Copy project name [After detail tweaks for clean project name/ID]
     var projectNameAndId = document.querySelector('#projectDeetNewNameDiv');
     projectNameAndId = projectNameAndId.textContent;
-    $( 'body' ).append( "<img src='http://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy project name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"http://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"http://i.imgur.com/HwRdEjY.png\"'></img>" );
+    $( 'body' ).append( "<img src='https://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy project name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"https://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"https://i.imgur.com/HwRdEjY.png\"'></img>" );
     $( 'body' ).append( "<textarea readonly class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + projectNameAndId + "</textarea>" );
     $( 'body' ).append( "<div id='copySuccessful'>Copied!</div>" );
     var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 53px; right: 0px; cursor: pointer; z-index: 10000; padding: 5px; }";
@@ -387,7 +377,13 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         }, 1000);
     });
     
+    // Update project info box to scale to new details length
+    var infoBoxAdjusted = $('#detailBody').height();
+    infoBoxAdjusted = parseInt(infoBoxAdjusted,10) - 17;
+    var infoBoxDynamic = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: " + infoBoxAdjusted + "px !important; }";
+    $( '#knowledgeBetterCSS' ).append( infoBoxDynamic );
         
+    
     // Project page tab-specific changes
     var allTablesProjPage = document.getElementsByTagName("table");
     var allTablesProjPageIndex = allTablesProjPage.length;
@@ -407,7 +403,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
         leadTable.style.border = "none";
         
         // Count displayed
-        var recruitCountLoc = document.querySelector(".recordTotla");
+        var recruitCountLoc = document.querySelector("td.sectionHeaderUnderdline span.recordTotla");
         var recruitCount = recruitCountLoc.textContent;
         var findInSource = document.getElementsByTagName('html')[0].innerHTML;
         var numRecruits = "main_main_tbcAllProject_Leads_rptLeads_trNote";
@@ -421,7 +417,44 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
                 $("#main_main_tbcAllProject_Leads_pnlLeads").html($("#main_main_tbcAllProject_Leads_pnlLeads").html().replace(uIDregex,'<div style="display: inline; color: green; font-weight: bold;">'+userIDTag+'</div>'));
             };
         };
-            
+        
+        // Making things clickable and ghostable... but first: iterate through lead rows
+        function makeThingsClickable() {
+            var x = $('#main_main_tbcAllProject_Leads_pnlLeads table tbody tr:last').attr('id');
+            x = x.replace("main_main_tbcAllProject_Leads_rptLeads_trTranslator_", "");
+            x = parseInt(x,10) + 1;
+            for(var i=0; i < x; i++){
+                // Make URLs, emails, and project IDs clickable in history notes
+                var histnotediv = "#main_main_tbcAllProject_Leads_rptLeads_trNote_" + i;
+                $(histnotediv).each(function() { 
+                    $(this).html($(this).html().replace(/(https?\:\/\/[^\<\s]+)/g,
+                    '<a href="$1" target="_blank" style="text-decoration:none;">$1 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/External-link-01-16x16.svg/120px-External-link-01-16x16.svg.png" height="10px" width="10px"/></a> ')); 
+                });
+                $(histnotediv).each(function() { 
+                    $(this).html($(this).html().replace(/([^\s][\w\d\.]+\@[\w\d]+\.[\w\d\.]+[^\s\<]+)/g,
+                    ' <a href="mailto:$1" style="text-decoration:none;">$1</a>')); 
+                });
+                $(histnotediv).each(function() { 
+                    $(this).html($(this).html().replace(/(?:\(ID\:(\d+)\))/g,
+                    '(ID:<a href="https://www.crgstaff.com/Projects/ProjectDetail_Tabbed.aspx?id=$1" target="_blank" style="text-decoration:none;">$1</a>)')); 
+                });
+                var infoBoxDynamic = "#main_main_tbcAllProject_Leads_rptLeads_tblRepeater > tbody > tr { text-decoration: none; }";
+                $( '#knowledgeBetterCSS' ).append( infoBoxDynamic );
+                // Add ghost history notes to proactive projects
+                if (document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblType_0').innerHTML == "ProActive") {
+                    var leadnamediv = "#main_main_tbcAllProject_Leads_rptLeads_lnkLead_" + i;
+                    var histnoteicon = "#main_main_tbcAllProject_Leads_rptLeads_lnkHistoryNote_" + i;
+                    var leadname = document.querySelector(leadnamediv);
+                    var leadid = $(leadname).attr("title");
+                    var histnoteurl = "../Members/AddItem.aspx?t=4&mid="+leadid;
+                    var ghost = "<img src='https://i.imgur.com/zh62pMf.png' height='16px' width='16px' title='Add a Ghost History Note which can exclude this project ID' />";
+                    $(histnoteicon).after('<br /><a href="' + histnoteurl + '"  onclick="window.open(\'' + histnoteurl + '\', \'newwindow\', \'width=600, height=500\'); return false;">' + ghost + '</a>');
+                };
+            };
+        };
+        // Fire!
+        makeThingsClickable();
+        
         // Bundle & sort leads
         /*
         var leadRow = $("#main_main_tbcAllProject_Leads_rptLeads_tblRepeater > tbody > tr");
@@ -535,7 +568,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     // Copy expert name
     var expertNameAndId = document.querySelector('#expertDeetNewNameDiv');
     expertNameAndId = expertNameAndId.textContent;
-    $( 'body' ).append( "<img src='http://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy expert name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"http://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"http://i.imgur.com/HwRdEjY.png\"'></img>" );
+    $( 'body' ).append( "<img src='https://i.imgur.com/HwRdEjY.png' id='textAreaCopyBtn' title='Copy expert name & ID to clipboard' class='js-textareacopybtn' onmouseover='this.src=\"https://i.imgur.com/8Ik1YW8.png\"' onmouseout='this.src=\"https://i.imgur.com/HwRdEjY.png\"'></img>" );
     $( 'body' ).append( "<textarea class='js-copytextarea' style='position:fixed;top:-1000px;left:-1000px;'>" + expertNameAndId + "</textarea>" );
     $( 'body' ).append( "<div id='copySuccessful'>Copied!</div>" );
     var copyInfoBtnStyles = "#textAreaCopyBtn { position: fixed; top: 52px; right: 0px; cursor: pointer; z-index: 10000; padding: 5px; }";
@@ -641,6 +674,34 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
             };
         };
     };
+    
+    // Making things clickable in notes; iterate through rows
+    function makeNotesClickable() {
+        var x = $('#main_main_tbcAllHistory_pnlNotes > table > tbody > tr:last > td > span').attr('id');
+        x = x.replace("main_main_tbcAllHistory_rptNotes_lblNoteText_", "");
+        x = parseInt(x,10) + 1;
+        for(var i=0; i < x; i++){
+            // Make URLs, emails, and project IDs clickable in history notes
+            var histnotediv = "#main_main_tbcAllHistory_rptNotes_lblNoteText_" + i;
+            $(histnotediv).each(function() { 
+                $(this).html($(this).html().replace(/(https?\:\/\/[^\<\s]+)/g,
+                '<a href="$1" target="_blank" style="text-decoration:none;">$1 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/External-link-01-16x16.svg/120px-External-link-01-16x16.svg.png" height="10px" width="10px"/></a> ')); 
+            });
+            $(histnotediv).each(function() { 
+                $(this).html($(this).html().replace(/([^\s][\w\d\.]+\@[\w\d]+\.[\w\d\.]+[^\s\<]+)/g,
+                ' <a href="mailto:$1" style="text-decoration:none;"><img src="https://cdn4.iconfinder.com/data/icons/ios7-active-2/512/Open_mail.png" height="10px" width="10px"/>$1</a>')); 
+            });
+            $(histnotediv).each(function() { 
+                $(this).html($(this).html().replace(/(?:\(ID\:\s?(\d+)\))(?!\sc|\so)/g,
+                '(ID:<a href="https://www.crgstaff.com/Projects/ProjectDetail_Tabbed.aspx?id=$1" target="_blank" style="text-decoration:none;">$1</a>)')); 
+            });
+            $(histnotediv).each(function() { 
+                $(this).html($(this).html().replace(/(?:\(ID\:\s?(\d+)\))(?=\sc|\so)/g,
+                '(ID:<a href="https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx?id=$1" target="_blank" style="text-decoration:none;">$1</a>)')); 
+            });
+        };
+    };
+    makeNotesClickable();
     
 } else if(document.URL.indexOf("Overview.aspx") >= 0) {
 // Overview page changes
