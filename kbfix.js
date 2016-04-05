@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.4.0
+// @version      2.4.1
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.4.0";
-// Release notes: Proactive ghosting and clickable URLs, emails, and IDs in history notes
+var knowledgeBetterVer = "2.4.1";
+// Release notes: Targets & interests clickable & searchable
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
@@ -34,7 +34,7 @@ if (isFirefox === true) {
 $( 'body' ).append( '<style type="text/css" id="knowledgeBetterCSS"></style>' );
 var knowledgeBetterCSS = document.getElementById('#knowledgeBetterCSS');
 
-// Init user variables
+// Init privileged user variables
 if (isChrome === true) {
     var userIDLoc = document.querySelector("#_panelMenu__lblWelcome");
     var userID = userIDLoc.innerText.replace("Welcome ", "");
@@ -48,6 +48,7 @@ if (isChrome === true) {
     else if (userID == "emabunga") { uIDrecognize = true; var userIDTag = "Mabunga, E."; var userFN = "Elicia"; var userLN = "Mabunga"; }
     else if (userID == "awillard") { uIDrecognize = true; var userIDTag = "Willard, A."; var userFN = "Andy"; var userLN = "Willard"; }
     else if (userID == "klindholm") { uIDrecognize = true; var userIDTag = "Lindholm, K."; var userFN = "Kyle"; var userLN = "Lindholm"; }
+    else if (userID == "zwienandt") { uIDrecognize = true; var userIDTag = "Wienandt, Z."; var userFN = "Zach"; var userLN = "Wienandt"; }
     else { throw new Error( 'Unrecognized user. Please uninstall this plugin.' ); };
 };
 
@@ -112,7 +113,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     projectDetailTitle.textContent = "";
     
     // Extend project info box
-    var infoBoxStyle = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { min-height: 560px; border: solid 3px #E6E6E6 !important; max-width: 900px; background: white; }";
+    var infoBoxStyle = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { min-height: 560px; border: solid 3px #E6E6E6 !important; max-width: 900px; background: white; resize: vertical; }";
     $( '#knowledgeBetterCSS' ).append( infoBoxStyle );
     
     // Tweak Project Information window location & visuals
@@ -258,12 +259,25 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var projectDeetClType = "#detailRow12 > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #detailRow12 > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClType );
     
-    // Highlght Target Companies
+    // xx Highlght Target Companies & make searchable 16
     var projectDeetTargets = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblTargetCompanies_0');
     if (projectDeetTargets.innerHTML != "None") {
         projectDeetTargets.style.color = "red";
         projectDeetTargets.style.fontWeight = "bold";
+        $(projectDeetTargets).each(function() { 
+            $(this).html($(this).html().replace(/(?:\,*\s*)([\w\d\s]*[\w\d\.]+\s*[\w\d\.]+)(?:[\s\,]+)/g,
+            ' <a href="https://www.linkedin.com/vsearch/p?company=$1" target="_blank" style="text-decoration:none;color:inherit;">$1</a>, ')); 
+        });
     };  
+    
+    // xx Companies of Interest searchable
+    var projectDeetCompanyofInterest = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblCompaniesOfInterest_0');
+    if (projectDeetCompanyofInterest.innerHTML != "None") {
+        $(projectDeetCompanyofInterest).each(function() { 
+            $(this).html($(this).html().replace(/(?:\,*\s*)([\w\d\s]*[\w\d\.]+\s*[\w\d\.]+)(?:[\s\,]+)/g,
+            ' <a href="https://www.linkedin.com/vsearch/p?company=$1" target="_blank" style="text-decoration:none;color:inherit;">$1</a>, ')); 
+        });
+    };
     
     // 17 AM info 21
     var projectDeetAMLabel = "#detailRow21 > td:nth-of-type(1) { display: none !important; }";
@@ -376,12 +390,6 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
             $( '#copySuccessful' ).removeClass('copyClicked');
         }, 1000);
     });
-    
-    // Update project info box to scale to new details length
-    var infoBoxAdjusted = $('#detailBody').height();
-    infoBoxAdjusted = parseInt(infoBoxAdjusted,10) - 17;
-    var infoBoxDynamic = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(1) > div:nth-of-type(1) { height: " + infoBoxAdjusted + "px !important; }";
-    $( '#knowledgeBetterCSS' ).append( infoBoxDynamic );
         
     
     // Project page tab-specific changes
@@ -448,7 +456,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
                     var leadid = $(leadname).attr("title");
                     var histnoteurl = "../Members/AddItem.aspx?t=4&mid="+leadid;
                     var ghost = "<img src='https://i.imgur.com/zh62pMf.png' height='16px' width='16px' title='Add a Ghost History Note which can exclude this project ID' />";
-                    $(histnoteicon).after('<br /><a href="' + histnoteurl + '"  onclick="window.open(\'' + histnoteurl + '\', \'newwindow\', \'width=600, height=500\'); return false;">' + ghost + '</a>');
+                    $(histnoteicon).after('<br /><a href="' + histnoteurl + '"  onclick="javascript:return _b(\'' + histnoteurl + '\',430,550);">' + ghost + '</a>');
                 };
             };
         };
@@ -790,7 +798,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
 // Frenchie tax [Chrome-only]
 if (isChrome === true) {
     if ( uIDrecognize === true) {
-        if (userID == "parmes" || userID == "jsanders" || userID == "ksanders" ) {
+        if (userID == "parmes" || userID == "jsanders" || userID == "ksanders" || userID == "agilmore") {
             $( 'body' ).append( '<div id="frenchiebtn" style="position: fixed; bottom: 5px; right: 5px; cursor: pointer;">[+]</div>' );
             $( 'body' ).append( '<div id="frenchie" class="frenchieHide" style="position: fixed; bottom: 2px; right: 0px; height: 83px; width: 100px; transform: scaleX(-1); z-index: 10; background: url(\'http://static.wixstatic.com/media/e41b48_54ff68b1a20a4f32bd61e7e8744712a5.gif\'); background-size: contain;"></div>' );
             var frenchieBtnMagic = ".frenchieHide { display:none }";
@@ -810,9 +818,15 @@ if (isChrome === true) {
 };
 
 
+//for AG
+if (isChrome === true) {
+    if ( uIDrecognize === true) {
+        if (userID == "agilmore") {
+            document.title = document.title.replace("- Knowledge Broker", "");
+        };
+    };
+};
+
+
 // Source signature
 $("html").before("<!-- Injected with KnowledgeBetter v" + knowledgeBetterVer + " -->");
-
-
-// for AG
-// document.title = document.title.replace("- Knowledge Broker", "");
