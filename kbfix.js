@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.4.1
+// @version      2.4.2
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.4.1";
-// Release notes: Targets & interests clickable & searchable
+var knowledgeBetterVer = "2.4.2";
+// Release notes: Internal release bugfix
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
@@ -141,7 +141,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var floatingProjectNameCss = "#floatingProjectNameDiv { position:fixed;top:58px;right:25px;display:block;z-index:999; } #floatingProjectNameDiv span { font-size:11px !important; }";
     $( '#knowledgeBetterCSS' ).append( floatingProjectNameCss );
     document.getElementById("floatingProjectNameDiv").innerHTML = document.getElementById("floatingProjectNameDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 11px !important; display: inline; color: red;">(Anonymous)</div>')
-    $( '#floatingProjectNameDiv > span > a' ).remove();
+    $( '#floatingProjectNameDiv > span > span' ).remove();
     
     // Pin tab menu to top bar when scrolled past via jQuery
     var pinnedTabMenuCss = "#main_main_tbcAll_ulTabContainer.pinned { position: fixed; top: 63px;left: 0px;background-color: #F7F7F7;width: 100%;text-align: center;z-index:999;box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.31);border-bottom:solid 1px #BAC9D8; } .tabmenu span, span.active { background:inherit;border:none;padding:2px 15px 2px 15px; } .tabmenu span.active, span.active:hover { border-bottom:none;cursor:pointer;color: #DE1944;background: none; } .tabmenu { padding:4px;text-align:center; } .tabmenu span:hover { background: none;color: black; }";
@@ -208,7 +208,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     document.getElementById("projectIdActualDiv").innerHTML = document.getElementById("projectIdActualDiv").innerHTML.replace('(Anonymous)', '<div style="font-size: 18px !important; display: inline; color: red;">(Anonymous)</div>');
     
     // Move email tracking link to more appropriate location
-    $('#projectIdActualDiv > a').attr('id', 'emailTrackingLink');
+    $('#projectIdActualDiv > span').attr('id', 'emailTrackingLink');
     $( '#emailTrackingLink' ).appendTo( 'body' );
     var emailTrackingLinkStyle = "#emailTrackingLink { position: absolute; top: 102px; right: 10px; text-decoration: none; text-transform: uppercase; font-size: 9px; font-weight: bold; color: #999999; }";
     $( '#knowledgeBetterCSS' ).append( emailTrackingLinkStyle );
@@ -223,23 +223,31 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     var projectDeetClientComPos = "#detailRow1 > td:nth-of-type(2) { position: absolute; top: 72px; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClientComPos );
     
-    // 2 Client Analyst 6
+    // 2 Client Analyst 4
     var projectDeetClientAnalyst = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lnkContact_0');
     projectDeetClientAnalyst.style.fontSize = "15px";
     projectDeetClientAnalyst.style.textDecoration = "none";
-    var projectDeetClientAnalystLabel = "#detailRow6 > td:nth-of-type(1) { display: none !important; }";
+    var projectDeetClientAnalystLabel = "#detailRow4 > td:nth-of-type(1) { display: none !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystLabel );
-    var projectDeetClientAnalystPos = "#detailRow6 > td:nth-of-type(2) { position: absolute; top: 102px; }";
+    var projectDeetClientAnalystPos = "#detailRow4 > td:nth-of-type(2) { position: absolute; top: 102px; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClientAnalystPos );
     
-    // 7 Client Code 11
+    // 3 5
+    
+    // 4 6
+    
+    // 5 7
+    
+    // 6 8
+    
+    // 7 Client Code 9
     var projectDeetClientCode = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblClientCode_0').innerHTML;
     if (projectDeetClientCode == "") {
-        var projectDeetClientCodeHidden = "#detailRow11 { display: none !important; }";
+        var projectDeetClientCodeHidden = "#detailRow9 { display: none !important; }";
         $( '#knowledgeBetterCSS' ).append( projectDeetClientCodeHidden );
     };
      
-    // 8 Client Company Type 12
+    // 8 Client Company Type 10
     var clientTypeRaw = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblCompanyType_0');
     if (clientTypeRaw.innerHTML === "HedgeFund") {
         clientTypeRaw.innerHTML = "Hedge Fund";
@@ -254,76 +262,103 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
     } else {
         clientTypeRaw = clientTypeRaw;
     };
-    var projectDeetClTypeLabel = "#detailRow12 > td:nth-of-type(1) { display: none !important; }";
+    var projectDeetClTypeLabel = "#detailRow10 > td:nth-of-type(1) { display: none !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClTypeLabel );
-    var projectDeetClType = "#detailRow12 > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #detailRow12 > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
+    var projectDeetClType = "#detailRow10 > td:nth-of-type(2) { top: 130px; padding-left: 97px; position: absolute; font-size: 9px !important; text-transform: uppercase; font-weight: bold; } #detailRow10 > td:nth-of-type(2):before { content: '| client type is '; font-weight: normal; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetClType );
     
-    // xx Highlght Target Companies & make searchable 16
+    // 9 11
+    
+    // 10 12
+    
+    // 11 13
+    
+    // 12 Highlght Target Companies & make searchable 14
     var projectDeetTargets = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblTargetCompanies_0');
     if (projectDeetTargets.innerHTML != "None") {
-        projectDeetTargets.style.color = "red";
-        projectDeetTargets.style.fontWeight = "bold";
+        var targetstyles = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblTargetCompanies_0 { color: red; font-weight: bold; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblTargetCompanies_0 a:hover { border-bottom: dotted 1px red; }";
+        $( '#knowledgeBetterCSS' ).append( targetstyles );
         $(projectDeetTargets).each(function() { 
-            $(this).html($(this).html().replace(/(?:\,*\s*)([\w\d\s]*[\w\d\.]+\s*[\w\d\.]+)(?:[\s\,]+)/g,
-            ' <a href="https://www.linkedin.com/vsearch/p?company=$1" target="_blank" style="text-decoration:none;color:inherit;">$1</a>, ')); 
+            $(this).html($(this).html().replace(/(\w+\s*\w+\s*\w+(?:\s*(?:corporation|solutions))*)(?=\,*\s(?:ltd|limited|inc|corp|plc|llc|co|s\.*a|pty|sdn)*)/ig,
+            '<a href="https://www.linkedin.com/vsearch/p?company=$1" target="_blank" style="text-decoration:none;color:inherit;"));">$1</a>')); 
         });
     };  
     
-    // xx Companies of Interest searchable
+    // 13 Companies of Interest searchable 15
     var projectDeetCompanyofInterest = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblCompaniesOfInterest_0');
     if (projectDeetCompanyofInterest.innerHTML != "None") {
+        var intereststyles = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblCompaniesOfInterest_0 a:hover { border-bottom: dotted 1px black; }";
+        $( '#knowledgeBetterCSS' ).append( intereststyles );
         $(projectDeetCompanyofInterest).each(function() { 
-            $(this).html($(this).html().replace(/(?:\,*\s*)([\w\d\s]*[\w\d\.]+\s*[\w\d\.]+)(?:[\s\,]+)/g,
-            ' <a href="https://www.linkedin.com/vsearch/p?company=$1" target="_blank" style="text-decoration:none;color:inherit;">$1</a>, ')); 
+            $(this).html($(this).html().replace(/(\w+\s*\w+\s*\w+(?:\s*(?:corporation|solutions))*)(?=\,*\s(?:ltd|limited|inc|corp|plc|llc|co|s\.*a|pty|sdn)*)/ig,
+            '<a href="https://www.linkedin.com/vsearch/p?company=$1" target="_blank" style="text-decoration:none;color:inherit;">$1</a>')); 
         });
     };
     
-    // 17 AM info 21
-    var projectDeetAMLabel = "#detailRow21 > td:nth-of-type(1) { display: none !important; }";
+    // 14 Countries searchable 16
+    var projectDeetCountry = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblRegionCountry_0');
+    if (projectDeetCountry.innerHTML != "None") {
+        var countrystyles = "#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblRegionCountry_0 a:hover { border-bottom: dotted 1px black; }";
+        $( '#knowledgeBetterCSS' ).append( countrystyles );
+        $(projectDeetCountry).each(function() { 
+            $(this).html($(this).html().replace(/([\s\w]+)/g,
+            '<a href="https://www.google.com/maps/place/$1" target="_blank" style="text-decoration:none;color:inherit;">$1</a>')); 
+        });
+    };
+    
+    // 15 17
+    
+    // 16 18
+    
+    // 17 AM info 19
+    var projectDeetAMLabel = "#detailRow19 > td:nth-of-type(1) { display: none !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetAMLabel );
-    var projectDeetAM = "#detailRow21 > td:nth-of-type(2) { position: absolute; top: 160px; font-size: 14px !important; font-weight: bold; } #detailRow21 > td:nth-of-type(2):after { content: ' Account Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    var projectDeetAM = "#detailRow19 > td:nth-of-type(2) { position: absolute; top: 160px; font-size: 14px !important; font-weight: bold; } #detailRow19 > td:nth-of-type(2):after { content: ' Account Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetAM );
     
-    // 18 PM info 22
-    var projectDeetPMLabel = "#detailRow22 > td:nth-of-type(1) { display: none !important; }";
+    // 18 PM info 20
+    var projectDeetPMLabel = "#detailRow20 > td:nth-of-type(1) { display: none !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetPMLabel );
-    var projectDeetPM = "#detailRow22 > td:nth-of-type(2) { position: absolute; top: 180px; font-size: 14px !important; font-weight: bold; } #detailRow22 > td:nth-of-type(2):after { content: ' Project Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    var projectDeetPM = "#detailRow20 > td:nth-of-type(2) { position: absolute; top: 180px; font-size: 14px !important; font-weight: bold; } #detailRow20 > td:nth-of-type(2):after { content: ' Project Manager'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetPM );
     
-    // 19 Primary Associate info 23
-    var projectDeetPALabel = "#detailRow23 > td:nth-of-type(1) { display: none !important; }";
+    // 19 Primary Associate info 21
+    var projectDeetPALabel = "#detailRow21 > td:nth-of-type(1) { display: none !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetPALabel );
-    var projectDeetPA = "#detailRow23 > td:nth-of-type(2) { position: absolute; top: 210px; font-size: 14px !important; font-weight: bold; } #detailRow23 > td:nth-of-type(2):after { content: ' Primary Associate'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    var projectDeetPA = "#detailRow21 > td:nth-of-type(2) { position: absolute; top: 210px; font-size: 14px !important; font-weight: bold; } #detailRow21 > td:nth-of-type(2):after { content: ' Primary Associate'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetPA );
     
-    // 20 Secondary Associate(s) info 24
-    var projectDeetSALabel = "#detailRow24 > td:nth-of-type(1) { display: none !important; }";
+    // 20 Secondary Associate(s) info 22
+    var projectDeetSALabel = "#detailRow22 > td:nth-of-type(1) { display: none !important; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetSALabel );
-    var projectDeetSA = "#detailRow24 > td:nth-of-type(2) { position: absolute; top: 230px; font-size: 14px !important; font-weight: bold; } #detailRow24 > td:nth-of-type(2):after { content: ' Secondary Associate(s)'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
+    var projectDeetSA = "#detailRow22 > td:nth-of-type(2) { position: absolute; top: 230px; font-size: 14px !important; font-weight: bold; } #detailRow22 > td:nth-of-type(2):after { content: ' Secondary Associate(s)'; font-size: 9px; font-weight: normal; text-transform: uppercase; }";
     $( '#knowledgeBetterCSS' ).append( projectDeetSA );
     var getSAInfo = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblResearchers_0');
     if (getSAInfo.innerHTML === "None") {
-        var hideSAInfo = "#detailRow24 { display: none !important; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 198px 10px 5px 5px !important; }";
+        var hideSAInfo = "#detailRow22 { display: none !important; } #main_projectView__navProjectView_ITC0i0__projectViewDetail_0 > table > tbody > tr > td:nth-of-type(2) > table { margin: 198px 10px 5px 5px !important; }";
         $( '#knowledgeBetterCSS' ).append( hideSAInfo );
     };
     
-    // 23 Cloned Project ID 27
+    // 21 23
+     
+    // 22 24
+    
+    // 23 Cloned Project ID 25
     var clonedProjID = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblClonedProjectId_0').innerHTML;
     if (clonedProjID == "") {
-        var clonedProjIDHidden = "#detailRow27 { display: none !important; }";
+        var clonedProjIDHidden = "#detailRow25 { display: none !important; }";
         $( '#knowledgeBetterCSS' ).append( clonedProjIDHidden );
     };
     
-    // 24 Client Requested Calls 28
+    // 24 Client Requested Calls 26
     var nCalls = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblClientRequestedCalls_0').innerHTML;
     if (nCalls == "") {
-        var nCallsHidden = "#detailRow28 { display: none !important; }";
+        var nCallsHidden = "#detailRow26 { display: none !important; }";
         $( '#knowledgeBetterCSS' ).append( nCallsHidden );
     };
-    document.querySelector('#detailRow24 > td:nth-child(1) > span').innerHTML = "&#8470; Calls Requested:";
+    document.querySelector('#detailRow26 > td:nth-child(1) > span').innerHTML = "&#8470; Calls Requested:";
     
-    // 25 Highlight if end date has passed 29
+    // 25 Highlight if end date has passed 27
     var projEndDateRaw = document.querySelector('#main_projectView__navProjectView_ITC0i0__projectViewDetail_0__lblProjectEndDate_0').innerHTML;
     if (projEndDateRaw != "") {
         var projEndMonth = parseInt(projEndDateRaw.split("/")[0]);
@@ -345,7 +380,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
             $( '#knowledgeBetterCSS' ).append( projEndDateNear );
         };
     } else {
-        var projEndDateMissing = "#detailRow29 { display: none; }";
+        var projEndDateMissing = "#detailRow27 { display: none; }";
         $( '#knowledgeBetterCSS' ).append( projEndDateMissing );
     };
     
@@ -454,7 +489,7 @@ if(document.URL.indexOf("ProjectDetail_Tabbed.aspx") >= 0){
                     var histnoteicon = "#main_main_tbcAllProject_Leads_rptLeads_lnkHistoryNote_" + i;
                     var leadname = document.querySelector(leadnamediv);
                     var leadid = $(leadname).attr("title");
-                    var histnoteurl = "../Members/AddItem.aspx?t=4&mid="+leadid;
+                    var histnoteurl = "../Members/AddItem.aspx?t=4&mid="+leadid+"&refreshParent=false";
                     var ghost = "<img src='https://i.imgur.com/zh62pMf.png' height='16px' width='16px' title='Add a Ghost History Note which can exclude this project ID' />";
                     $(histnoteicon).after('<br /><a href="' + histnoteurl + '"  onclick="javascript:return _b(\'' + histnoteurl + '\',430,550);">' + ghost + '</a>');
                 };
