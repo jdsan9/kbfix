@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.4.3
+// @version      2.4.4
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,15 +17,13 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.4.3";
-// Release notes: Pinned toolbars on expert & prospect page
+var knowledgeBetterVer = "2.4.4";
+// Release notes: Enabling users & cleaning up FF disable
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
 var isFirefox = typeof InstallTrigger !== 'undefined';
 if (isFirefox === true) {
-    var ffErrMsg = "Thank you for using the <b>KnowledgeBetter</b> plugin!<br/>Firefox is no longer supported. Switch to Chrome for additional features and more!<br/>You can hide this message by disabling the monkey plugin above.";
-    $('body').append('<div style="position:fixed;top:7px;right:9px;text-align:right;font-size:x-small;z-index:10000;">'+ffErrMsg+'</div>');
     throw new Error( 'Firefox is no longer supported. The KnowledgeBetter script has been halted. Revert to v2.2.x to continue using this plugin. Note that some features may not work correctly or at all.' );
     // Revert to v2.2.x to continue using this plugin.
 };
@@ -49,6 +47,8 @@ if (isChrome === true) {
     else if (userID == "awillard") { uIDrecognize = true; var userIDTag = "Willard, A."; var userFN = "Andy"; var userLN = "Willard"; }
     else if (userID == "klindholm") { uIDrecognize = true; var userIDTag = "Lindholm, K."; var userFN = "Kyle"; var userLN = "Lindholm"; }
     else if (userID == "zwienandt") { uIDrecognize = true; var userIDTag = "Wienandt, Z."; var userFN = "Zach"; var userLN = "Wienandt"; }
+    else if (userID == "achenlo") { uIDrecognize = true; var userIDTag = "Chenlo, A."; var userFN = "Andy"; var userLN = "Chenlo"; }
+    else if (userID == "amercolino") { uIDrecognize = true; var userIDTag = "Mercolino, A."; var userFN = "Alec"; var userLN = "Mercolino"; }
     else { throw new Error( 'Unrecognized user. Please uninstall this plugin.' ); };
 };
 
