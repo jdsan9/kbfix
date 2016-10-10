@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.4.4
+// @version      2.4.5
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.4.4";
-// Release notes: Enabling users & cleaning up FF disable
+var knowledgeBetterVer = "2.4.5";
+// Release notes: Enabling user
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
@@ -49,7 +49,8 @@ if (isChrome === true) {
     else if (userID == "zwienandt") { uIDrecognize = true; var userIDTag = "Wienandt, Z."; var userFN = "Zach"; var userLN = "Wienandt"; }
     else if (userID == "achenlo") { uIDrecognize = true; var userIDTag = "Chenlo, A."; var userFN = "Andy"; var userLN = "Chenlo"; }
     else if (userID == "amercolino") { uIDrecognize = true; var userIDTag = "Mercolino, A."; var userFN = "Alec"; var userLN = "Mercolino"; }
-    else { throw new Error( 'Unrecognized user. Please uninstall this plugin.' ); };
+    else if (userID == "wschwabe") { uIDrecognize = true; var userIDTag = "Schwabe, W."; var userFN = "Wolfram"; var userLN = "Schwabe"; }	
+    else { throw new Error( 'Sorry, you are not authorized to use this plugin.' ); };
 };
 
 
@@ -884,4 +885,4 @@ if (isChrome === true) {
 
 
 // Source signature
-$("html").before("<!-- Injected with KnowledgeBetter v" + knowledgeBetterVer + " -->");
+$("html").before("<!-- This page is enhanced with KnowledgeBetter v" + knowledgeBetterVer + " -->");
