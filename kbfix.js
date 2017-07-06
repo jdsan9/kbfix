@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.5.1
+// @version      2.5.2
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.5.1";
-// Release notes: Reversion bugfix (because I can't count)
+var knowledgeBetterVer = "2.5.2";
+// Release notes: Reversion bugfix (because I don't rationalize my logic)
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
@@ -84,7 +84,7 @@ $(document).on("click", "a", function(e){
         var rerep = /https?:\/\/staff\.colemanrg\.com\/#\/experts\/([0-9]{4,7})\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
         var newhref = href.replace(rerep, 'https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx?id=$1');
     } else {
-        newhref = href;
+        return false;
     };
     // relocate
     location.href = newhref;
