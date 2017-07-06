@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.5.3
+// @version      2.5.4
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.5.3";
-// Release notes: Reversion bugfix (because I really don't rationalize my logic)
+var knowledgeBetterVer = "2.5.4";
+// Release notes: Reversion reversion (because I broke everything)
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
@@ -73,18 +73,6 @@ loadingLabel.textContent = "Combobulating Results Matrix...";
 // Lock TypeAhead results position to search box [for Chrome]
 var lockTypeAheadPositionCss = "#_panelMenu__kbtypeahead__popupKBSearch_PW-1 { top:54px !important; }";
 $( '#knowledgeBetterCSS' ).append( lockTypeAheadPositionCss );
-
-// Make TypeAhead results point to current gen
-$(document).on("click", "a", function(e){
-    e.preventDefault();
-    var href = $(this).attr("href");
-    var rematch = /https?:\/\/staff\.colemanrg\.com\/#\/experts\//g;
-    var rerep = /https?:\/\/staff\.colemanrg\.com\/#\/experts\/([0-9]{4,7})\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-    if (href.match(rematch) === true) {
-        var href = href.replace(rerep, 'https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx?id=$1');
-    };
-    location.href = href;
-});
 
 // Restyle sticky header bar
 $('#_panelMenu').removeClass("dxrpControl_Office2010Blue");
