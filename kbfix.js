@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KnowledgeBetter
 // @namespace    https://crgstaff.com/
-// @version      2.5.2
+// @version      2.5.3
 // @description  A complete UX overhaul for KnowledgeBroker. See comments for change list.
 // @author       jdsan9
 // @grant        none
@@ -17,8 +17,8 @@
 // Global Variables
 
 // Current version
-var knowledgeBetterVer = "2.5.2";
-// Release notes: Reversion bugfix (because I don't rationalize my logic)
+var knowledgeBetterVer = "2.5.3";
+// Release notes: Reversion bugfix (because I really don't rationalize my logic)
 
 // Browser detection & FF error
 var isChrome = !!window.chrome && !!window.chrome.webstore;
@@ -78,16 +78,12 @@ $( '#knowledgeBetterCSS' ).append( lockTypeAheadPositionCss );
 $(document).on("click", "a", function(e){
     e.preventDefault();
     var href = $(this).attr("href");
-    // logic on when to update the href
     var rematch = /https?:\/\/staff\.colemanrg\.com\/#\/experts\//g;
-    if (href.match(rematch)) {
-        var rerep = /https?:\/\/staff\.colemanrg\.com\/#\/experts\/([0-9]{4,7})\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-        var newhref = href.replace(rerep, 'https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx?id=$1');
-    } else {
-        return false;
+    var rerep = /https?:\/\/staff\.colemanrg\.com\/#\/experts\/([0-9]{4,7})\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    if (href.match(rematch) === true) {
+        var href = href.replace(rerep, 'https://www.crgstaff.com/Members/MemberProfile_Tabbed.aspx?id=$1');
     };
-    // relocate
-    location.href = newhref;
+    location.href = href;
 });
 
 // Restyle sticky header bar
